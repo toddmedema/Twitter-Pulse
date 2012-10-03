@@ -4,18 +4,15 @@
     -webkit-border-#{$side}-radius: $radius;
 }
 
+// note: bad for mobile scrolling performance
 @mixin box_shadow($hor_offset, $ver_offset, $blur, $spread, $color, $inset: "") {
     box-shadow: #{$inset} $hor_offset $ver_offset $blur $spread $color;
     -moz-box-shadow: #{$inset} $hor_offset $ver_offset $blur $spread $color;
     -webkit-box-shadow: #{$inset} $hor_offset $ver_offset $blur $spread $color;
 }
-//horizontal offset, vertical offset, optional blur distance and optional spread distance
 
-// box shadow
-//box-shadow: 0 4px 4px -2px #232323;
-//-moz-box-shadow: 0 4px 4px -2px #232323;
-//-webkit-box-shadow: 0 4px 4px -2px #232323;
-// transition
-//-webkit-transition: background .2s linear;
-//-moz-transition: background .2s linear;
-//transition: background .2s linear;
+@mixin box_sizing() {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}

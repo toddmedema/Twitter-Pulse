@@ -1,8 +1,6 @@
 window.onresize = function(event) {
     // resize the search text input
-    var padding = 38; 
-    if (window.innerWidth < 700) { padding = 50; }
-    var width = $("#add_search_field").parent().width() - padding;
+    var width = $("#add_search_field").parent().width() - 38;
     $("#add_search_field").width(width);
     // resize UI
     if (UI !== undefined) {

@@ -15,7 +15,10 @@
 
 #search_bar {
   position: fixed;
-  top: 125px; }
+  top: 125px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
 
 #add_search_button {
   position: absolute;
@@ -26,7 +29,10 @@
   height: 100%;
   position: absolute;
   top: 126px;
-  left: 235px; }
+  left: 235px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
 
 @media only screen and (min-width: 768px) and (max-width: 959px) {
   #pages {
@@ -51,7 +57,7 @@
     border-bottom: 2px solid #ccc; }
 
   #add_search_button {
-    right: 15px; }
+    right: 5px; }
 
   #trending_title, #trending {
     display: none; }
@@ -88,10 +94,7 @@ button {
 
 /* top */
 #content {
-  background: #f2f2f2;
-  box-shadow:  0px 0px 20px 10px black;
-  -moz-box-shadow:  0px 0px 20px 10px black;
-  -webkit-box-shadow:  0px 0px 20px 10px black; }
+  background: #f2f2f2; }
 
 #top {
   padding: 4px 0px 0px 0px;
@@ -99,9 +102,6 @@ button {
   z-index: 100;
   background-color: white;
   border-bottom: thin solid #ddd;
-  box-shadow:  0px 4px 4px -2px #232323;
-  -moz-box-shadow:  0px 4px 4px -2px #232323;
-  -webkit-box-shadow:  0px 4px 4px -2px #232323;
   text-align: center;
   font-size: 24px; }
   #top #tabs div {
@@ -189,6 +189,11 @@ button {
 @media only screen and (min-width: 768px) {
   body {
     background-image: url("../img/bg.jpg"); }
+
+  #top {
+    box-shadow:  0px 4px 4px -2px #232323;
+    -moz-box-shadow:  0px 4px 4px -2px #232323;
+    -webkit-box-shadow:  0px 4px 4px -2px #232323; }
 
   .tweet:hover {
     background: white;

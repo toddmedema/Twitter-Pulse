@@ -19,6 +19,7 @@
 #search_bar {
     position: fixed;
     top: 125px;
+    @include box_sizing();
 }
 #add_search_button {
     position: absolute;
@@ -30,6 +31,7 @@
     position: absolute;
     top: 126px;
     left: 235px;
+    @include box_sizing();
 }
 @media only screen and (min-width: 768px) and (max-width: 959px) {
     #pages {
@@ -56,13 +58,14 @@
         border-bottom: 2px solid #ccc;
     }
     #add_search_button {
-        right: 15px;
+        right: 5px;
     }
     #trending_title, #trending {
         display: none;
     }
     #pages {
         padding: 5px;
+        
     }
 }
 
@@ -102,7 +105,6 @@ button {
 /* top */
 #content {
     background: $cl-mainbg;
-    @include box_shadow(0px, 0px, 20px, 10px, #000);
 }
 #top {
     padding: 4px 0px 0px 0px;
@@ -110,7 +112,6 @@ button {
     z-index: 100;
     background-color: $cl-hvrbg;
     border-bottom: thin solid #ddd;
-    @include box_shadow(0px, 4px, 4px, -2px, #232323);
     text-align: center;
     font-size: 24px;
     #tabs div {
@@ -206,10 +207,13 @@ only screen and (min-device-pixel-ratio: 2) {
 }
 /* ===Size-dependent styling=== */
 @media only screen and (min-width: 768px) {
-    body {
+    body { // background not shown
         background-image: url('../img/bg.jpg');
     }
-    .tweet:hover {
+    #top { // performance issues on mobile
+        @include box_shadow(0px, 4px, 4px, -2px, #232323);
+    }
+    .tweet:hover { // no point having hover on a touch device
         background: $cl-hvrbg;
         -webkit-transition: background .2s linear;
         -moz-transition: background .2s linear;
