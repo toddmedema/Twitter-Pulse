@@ -24,12 +24,14 @@ tps_chart.prototype.update = function() {
     // for each search term, plot data
     var xScale = this.xScale;
     var yScale = this.yScale;
+    var line = d3.svg.line()
+                .x(function(d,i) { return xScale(i); })
+                .y(function(d) { return yScale(d); })
+                .interpolate("basis");
     for (var i = 0; i < SEARCHES.length; i++) {
         var data = this.data[enc_name(SEARCHES[i])].slice(0, this.num_to_show);
         
-        var line = d3.svg.line()
-                .x(function(d,i) { return xScale(i); })
-                .y(function(d) { return yScale(d); })
+        
         this.chart.append("svg:path").attr("d", line(data)).attr("class", "chart_line, color"+i).style("fill", "rgba(0,0,0,0)");
     }
 }
@@ -83,12 +85,12 @@ tps_chart.prototype.draw_text = function() {
                 .attr("text-anchor", "middle")
                 .attr("x", this.width/2)
                 .attr("y", this.height - 2)
-                .text("time");
+                .text("time (s)");
     this.chart.append("text")
                 .attr("class", "axis_label")
                 .attr("text-anchor", "middle")
                 .attr("y", 10)
                 .attr("x", -(this.height-this.bottomPadding-this.topPadding)/2 - this.topPadding)
                 .attr("transform", "rotate(-90)")
-                .text("tweets/second");
+                .text("new tweets");
 }

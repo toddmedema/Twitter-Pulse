@@ -7,11 +7,12 @@ var COLORS = []; // the color for each search term
 $(document).ready(function() {
     UI = new Ui();
     window.onresize(); // make sure the UI fits the screen
-    UI.display_next_tweet(); // start the tweet display function
     TWITTER = new Twitter();
     TWITTER.add_search("apple");
     TWITTER.add_search("iphone");
     TWITTER.update(); // begins fetching twitter data
+    UI.update(true); // start having UI update regularly
+    UI.display_next_tweet(); // start the tweet display function
     $("#analytics_tab").click();
 });
 

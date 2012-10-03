@@ -1,5 +1,6 @@
 function Twitter() {
     this.update_interval = 5000;
+    this.new_search = false; // lets UI know when a new search has been done
     this.error = false;
     this.tweets = {}; // list tweets for each search term
     this.cross_tweets = []; // tweets that show up under multiple terms
@@ -22,7 +23,7 @@ Twitter.prototype.update = function() {
 Twitter.prototype.update_thread = function(search) {
     var encoded_search = enc_name(search);
     var initial_tweet_count = TWITTER.tweets[encoded_search].length;
-    $.getJSON("http://search.twitter.com/search.json?q="+encoded_search+"&rpp=100&callback=?", function(data) {
+    $.getJSON("http://search.twitter.com/search.json?q="+encodeURIComponent(search)+"&rpp=100&callback=?", function(data) {
         if (data.error !== undefined && !TWITTER.error) {
             TWITTER.error = true;
             TWITTER.update_interval *= 2;
@@ -32,8 +33,12 @@ Twitter.prototype.update_thread = function(search) {
         $(data.results).each(function(i,v) {
             TWITTER.add_tweet(search, this);
         });
-        var tps = (TWITTER.tweets[encoded_search].length - initial_tweet_count) * 1000 / TWITTER.update_interval;
-        TWITTER.tweets_per_second[encoded_search].unshift(tps);
+        // make sure the search hasn't been deleted, then store tps data
+        if (TWITTER.tweets[encoded_search] !== undefined) {
+            var tps = (TWITTER.tweets[encoded_search].length - initial_tweet_count) * 1000 / TWITTER.update_interval;
+            TWITTER.tweets_per_second[encoded_search].unshift(tps);
+            TWITTER.new_search = true;
+        }
     });
 }
 
@@ -79,7 +84,7 @@ Twitter.prototype.add_search = function(name) {
         
         name = name.toLowerCase();
         var encoded_search = enc_name(name);
-        if (SEARCHES.indexOf(encoded_search) != -1) {
+        if (SEARCHES.indexOf(name) != -1) {
             alert("You're already searching for that phrase");
         } else {
             SEARCHES.push(name);
@@ -87,7 +92,6 @@ Twitter.prototype.add_search = function(name) {
             TWITTER.tweets[encoded_search] = [];
             TWITTER.tweets_per_second[encoded_search] = [0];
             UI.add_search(name);
-            UI.update();
         }
     }
 }
@@ -109,6 +113,5 @@ Twitter.prototype.remove_search = function(name) {
         }
         delete TWITTER.tweets[encoded_search];
         delete TWITTER.tweets_per_second[encoded_search];
-        UI.update();
     }
 }

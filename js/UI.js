@@ -9,7 +9,6 @@ window.onresize = function(event) {
             UI.page_width = $("#pages").width();
             if (window.innerWidth < 700) { UI.page_width -= 10; }
         }
-        UI.update();
     }
 }
 
@@ -21,19 +20,36 @@ function Ui() {
     this.tweet_queue = []; // queue of tweets to display
     this.tweet_display_speed = 1000;
     this.tweet_display_max = 30; // maximum number of tweets to show in DOM
+    this.last_search = 0; // last Twitter search
+    this.update_interval = 1000;
 }
 
-Ui.prototype.update = function() {
+Ui.prototype.update = function(repeat) {
+    if (TWITTER !== undefined && repeat) {
+        // no new data from Twitter, so fill in data to keep the chart moving
+        if (!TWITTER.new_search) {
+            for (var i = 0; i < SEARCHES.length; i++) {
+                var encoded_search = enc_name(SEARCHES[i]);
+                var current = TWITTER.tweets_per_second[encoded_search][0];
+                TWITTER.tweets_per_second[encoded_search].unshift(current);
+            }
+        } else {
+            TWITTER.new_search = false;
+        }
+    }
     // update charts
     for (var i = 0; i < UI.charts.length; i++) {
         UI.charts[i].update();
     }
-    // update tweet #'s and search colors
+    // update tweet #'s and search colors inside of chart
     for (var i = 0; i < SEARCHES.length; i++) {
         var search = SEARCHES[i];
         var encoded_search = enc_name(search);
         $("#"+encoded_search+"_listing .tweet_count").html(String(TWITTER.tweets[encoded_search].length));
         $('.color'+i).css('background-color', COLORS[i]).css('stroke', COLORS[i]);
+    }
+    if (repeat) {
+        setTimeout(function() {UI.update(true);}, UI.update_interval);
     }
 }
 
@@ -73,7 +89,7 @@ $('#add_search_field').keydown(function(event) {
     }
 });
 $("#add_search_button").click(function() {
-    if ($("#add_search_field").val() === "") {
+    if ($("#add_search_field").val() === "" || $("#add_search_field").val() === "Add a search term") {
         alert("Please enter a search term to add");
     } else {
         TWITTER.add_search($("#add_search_field").val());
@@ -81,12 +97,13 @@ $("#add_search_button").click(function() {
     }
 });
 $(document).on("click", ".del_search_button", function() {
-    var search = $(this).attr("id").replace("_del", "");
-    TWITTER.remove_search(search);
+    var search = $(this).parent().children(".term").text();
     $(this).parent().remove();
+    TWITTER.remove_search(search);
+    UI.update();
 });
 $(document).on("click", ".add_trending_button", function() {
-    var search = $(this).attr("id").replace("_add", "");
+    var search = $(this).parent().children(".term").text();
     $(this).parent().remove();
     TWITTER.add_search(search);
 });
@@ -103,6 +120,7 @@ Ui.prototype.add_search = function(search) {
 }
 Ui.prototype.add_tps_chart = function() {
     UI.charts.push(new tps_chart());
+    UI.update();
 }
 
 Ui.prototype.add_tweet = function(tweet) {
@@ -113,7 +131,7 @@ Ui.prototype.display_next_tweet = function() {
     if (UI.tweet_queue.length > 0 && !$('#tweets_page').is(":hidden")) {
         // if there's a big queue to display, move faster (but still with a delay)
         display_speed = Math.max(display_speed - (UI.tweet_queue.length * 10), 100);
-        var tweet = UI.tweet_queue.shift();
+        var tweet = UI.tweet_queue.pop();
         var div = $("<div class='tweet'></div>");
         var text = $("<p>" + tweet.text + "<br/>- </p>");
         var link = $("<a href='http://twitter.com/" + tweet.from_user + "'>" + tweet.from_user + "</a> ");

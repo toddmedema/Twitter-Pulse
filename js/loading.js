@@ -28,13 +28,14 @@ function loading() {
             ctx.closePath();
             rotations += rotations_per_frame;
             if (rotations > 1) { rotations = 0; }
-            for (var i = 0; i < SEARCHES.length; i ++) {
-                var search = SEARCHES[i];
-                if (TWITTER !== undefined && TWITTER.tweets_per_second[search].length > 2) {
-                    loaded = true;
-                    UI.add_tps_chart();
-                    UI.update();
-                    break;
+            if (TWITTER !== undefined) {
+                for (var i = 0; i < SEARCHES.length; i++) {
+                    var encoded_search = enc_name(SEARCHES[i]);
+                    if (TWITTER.tweets_per_second[encoded_search].length > 2) {
+                        loaded = true;
+                        UI.add_tps_chart();
+                        break;
+                    }
                 }
             }
         } else if (!$('#analytics_page').is(":hidden")) {

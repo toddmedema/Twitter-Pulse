@@ -12,7 +12,7 @@ function hashString(string){
 // turns a search term into a URL & CSS safe string
 function enc_name(name) {
     var encoded = encodeURIComponent(name);
-    var CSS_safe = encoded.replace(/%/g,"");
+    var CSS_safe = encoded.replace(/%/g,"").replace(/'/g, "");
     return CSS_safe;
 }
 // modified from: https://developer.mozilla.org/en-US/docs/Canvas_tutorial/Drawing_shapes
