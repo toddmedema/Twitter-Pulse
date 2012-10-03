@@ -18,9 +18,11 @@ window.onresize = function(event) {
 function Ui() {
     this.loading = new loading();
     this.page_width = $("#pages").width();
+    this.charts = [];
+    
     this.tweet_queue = []; // queue of tweets to display
     this.tweet_display_speed = 1000;
-    this.charts = [];
+    this.tweet_display_max = 30; // maximum number of tweets to show in DOM
 }
 
 Ui.prototype.update = function() {
@@ -128,6 +130,10 @@ Ui.prototype.display_next_tweet = function() {
         div.html(text);
         $("#tweets").prepend(div);
         $(div).hide().fadeIn(display_speed);
+        // if too many tweets in DOM, remove old ones
+        if ($(".tweet").length > UI.tweet_display_max) {
+            $(".tweet:last").remove();
+        }
     }
     setTimeout(UI.display_next_tweet, display_speed);
 }
