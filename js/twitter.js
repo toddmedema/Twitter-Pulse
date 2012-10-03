@@ -4,7 +4,8 @@ function Twitter() {
     this.tweets = {}; // list tweets for each search term
     this.cross_tweets = []; // tweets that show up under multiple terms
     this.tweets_per_second = {}; // history of tweets per second, per search term
-    this.till_next_search = 0; // ms till next search
+    this.start_time = 0; // time last search ended
+    this.end_time = (new Date()).getTime(); // time next search starts
 }
     
 // check for new tweets
@@ -14,7 +15,8 @@ Twitter.prototype.update = function() {
         TWITTER.update_thread(search);
     }
     setTimeout(TWITTER.update, TWITTER.update_interval);
-    TWITTER.till_next_search = TWITTER.update_interval - 100; // account for small UI delay
+    TWITTER.start_time = TWITTER.end_time;
+    TWITTER.end_time = (new Date()).getTime() + TWITTER.update_interval;
     UI.update();
 }
 Twitter.prototype.update_thread = function(search) {

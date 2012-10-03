@@ -12,7 +12,7 @@ $(document).ready(function() {
     TWITTER.add_search("apple");
     TWITTER.add_search("iphone");
     TWITTER.update(); // begins fetching twitter data
-    $("#search_tab").click();
+    $("#analytics_tab").click();
 });
 
 // loads & displays trending topics as suggestions to user

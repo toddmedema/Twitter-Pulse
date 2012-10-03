@@ -37,8 +37,10 @@ function loading() {
                     break;
                 }
             }
-        } else {
-            var percent = (1 - (TWITTER.till_next_search / TWITTER.update_interval));
+        } else if (!$('#analytics_page').is(":hidden")) {
+            var current_time = (new Date()).getTime();
+            var percent = (1 - ((TWITTER.end_time - current_time) / TWITTER.update_interval));
+            if (percent > 1) { percent = 1; }
             if (current_percent > percent) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 draw_rrectangle(ctx, 0, 0, canvas.width, canvas.height, radius, "stroke");

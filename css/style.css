@@ -63,6 +63,10 @@
 body, html {
   height: 100%; }
 
+body {
+  font-family: Oxygen, serif;
+  color: #222222; }
+
 .page {
   display: none;
   visibility: hidden; }
@@ -83,11 +87,6 @@ button {
     background-color: #d2d2d2; }
 
 /* top */
-body, html {
-  background-image: url("../img/bg.jpg");
-  font-family: Oxygen, serif;
-  color: #222222; }
-
 #content {
   background: #f2f2f2;
   box-shadow:  0px 0px 20px 10px black;
@@ -138,8 +137,6 @@ body, html {
   background: url("../img/plus.png");
   background-position: -1px -1px;
   border: 1px solid #d2d2d2; }
-  #add_search_button:hover {
-    background-color: white; }
 
 .del_search_button {
   padding: 1px;
@@ -183,13 +180,19 @@ body, html {
   margin: 0px 0px 5px 0px;
   border: 1px solid #ccc;
   background: #eee; }
+
+.tweet p {
+  padding: 0px;
+  margin: 0px; }
+
+/* ===Size-dependent styling=== */
+@media only screen and (min-width: 768px) {
+  body {
+    background-image: url("../img/bg.jpg"); }
+
   .tweet:hover {
     background: white;
     -webkit-transition: background .2s linear;
     -moz-transition: background .2s linear;
     -ms-transition: background .2s linear;
-    transition: background .2s linear; }
-
-.tweet p {
-  padding: 0px;
-  margin: 0px; }
+    transition: background .2s linear; } }

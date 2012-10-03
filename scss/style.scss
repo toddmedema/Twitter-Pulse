@@ -68,15 +68,20 @@
 
 /* ==color and style== */
 /* general rules and classes */
-body, html {
-    height: 100%;
-}
 $cl-mainbg: #f2f2f2;
 $cl-hvrbg: #fff;
 $cl-slctbg: #d2d2d2;
 $cl-actvbg: #ddd;
 $cl-mainfnt: #222;
 $cl-blurfnt: #666;
+
+body, html {
+    height: 100%;
+}
+body {
+    font-family: Oxygen, serif;
+    color: $cl-mainfnt;
+}
 .page {
     display: none;
     visibility: hidden;
@@ -95,11 +100,6 @@ button {
     &:active { background-color: $cl-slctbg; }
 }
 /* top */
-body, html {
-    background-image: url('../img/bg.jpg');
-    font-family: Oxygen, serif;
-    color: $cl-mainfnt;
-}
 #content {
     background: $cl-mainbg;
     @include box_shadow(0px, 0px, 20px, 10px, #000);
@@ -154,9 +154,6 @@ only screen and (min-device-pixel-ratio: 2) {
     background: url('../img/plus.png');
     background-position: -1px -1px;
     border: 1px solid $cl-slctbg;
-    &:hover {
-        background-color: $cl-hvrbg;
-    }
 }
 .del_search_button {
     padding: 1px;
@@ -202,15 +199,21 @@ only screen and (min-device-pixel-ratio: 2) {
     margin: 0px 0px 5px 0px;
     border: 1px solid #ccc;
     background: #eee;
-    &:hover {
+}
+.tweet p {
+    padding: 0px;
+    margin: 0px;
+}
+/* ===Size-dependent styling=== */
+@media only screen and (min-width: 768px) {
+    body {
+        background-image: url('../img/bg.jpg');
+    }
+    .tweet:hover {
         background: $cl-hvrbg;
         -webkit-transition: background .2s linear;
         -moz-transition: background .2s linear;
         -ms-transition: background .2s linear;
         transition: background .2s linear;
     }
-}
-.tweet p {
-    padding: 0px;
-    margin: 0px;
 }

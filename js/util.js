@@ -1,13 +1,3 @@
-// diagnostic function, used to make sure duplicates aren't creeping into arrays that shouldn't have them
-function check_for_dupes(arr) {
-    for (var i = 0; i < arr.length; i++) {
-        for (var j = 0; j < arr.length; j++) {
-            if (i !==j && arr[i] === arr[j])
-                return true;
-        }
-    }
-    return false;
-}
 // string hash function, from http://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript-jquery
 function hashString(string){
     var hash = 0, i, char;
