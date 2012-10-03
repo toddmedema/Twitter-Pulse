@@ -1,0 +1,107 @@
+@import url(http://fonts.googleapis.com/css?family=Quantico|Oxygen);
+body, html {
+  height: 100%;
+  background-image: url("../bg.jpg");
+  font-family: Oxygen, serif;
+  color: #222222; }
+
+#content {
+  height: 100%;
+  overflow: scroll;
+  background: #f2f2f2;
+  box-shadow: 0px 0px 20px 10px #000; }
+
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 0px; }
+
+/* top bar */
+#header {
+  margin-top: 45px; }
+
+#logo {
+  width: 100px;
+  float: left;
+  margin-top: -48px; }
+
+#header h1 {
+  font-family: Quantico, sans-serif;
+  padding: 0px;
+  margin: 0px 0px 0px 110px; }
+
+#tabs {
+  width: 100%;
+  margin: 0px 0px 15px 0px;
+  padding: 1px 0px -1px 0px;
+  border-bottom: thin solid #ddd;
+  box-shadow: 0 4px 4px -2px #232323;
+  -moz-box-shadow: 0 4px 4px -2px #232323;
+  -webkit-box-shadow: 0 4px 4px -2px #232323;
+  text-align: center;
+  font-size: 24px; }
+  #tabs div {
+    padding: 2px 0px;
+    text-decoration: none; }
+    #tabs div:hover {
+      cursor: pointer;
+      text-decoration: underline; }
+    #tabs div:active {
+      background: #dddddd; }
+  #tabs .active_tab {
+    background: #d2d2d2; }
+
+/* Searches page */
+#search_page {
+  margin: 0px; }
+
+#search_list {
+  position: relative;
+  overflow: hidden; }
+
+#add_search_field {
+  width: 170px;
+  margin-top: 1px; }
+
+#add_search_button {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  background: url("../plus.png") #f2f2f2;
+  background-position: -1px -1px; }
+  #add_search_button:hover {
+    background-color: white; }
+
+.del_search_button {
+  padding: 1px;
+  margin: 0px 5px 0px 0px;
+  background: #F88; }
+
+#search_analytics {
+  margin: 0px; }
+
+.term {
+  font-weight: bold; }
+
+canvas {
+  background: #000;
+  position: relative; }
+
+/* Tweets page */
+.tweet {
+  padding: 0px 5px;
+  margin: 0px 0px 5px 0px;
+  border: 1px solid #ccc;
+  background: #eee; }
+  .tweet:hover {
+    background: white;
+    -webkit-transition: background .2s linear;
+    -moz-transition: background .2s linear;
+    -ms-transition: background .2s linear;
+    transition: background .2s linear; }
+
+.tweet p {
+  padding: 0px;
+  margin: 0px; }
