@@ -185,6 +185,13 @@ only screen and (min-device-pixel-ratio: 2) {
 }
 
 /* Tweets */
+#tweet_mode_toggle {
+    margin: 0px;
+    float: right;
+}
+#tweets {
+    padding-top: 32px;
+}
 .tweet {
     padding: 0px 5px;
     margin: 0px 0px 5px 0px;
@@ -194,6 +201,9 @@ only screen and (min-device-pixel-ratio: 2) {
 .tweet p {
     padding: 0px;
     margin: 0px;
+}
+#tweets_to_top {
+    display: none;
 }
 /* ===Size-dependent styling=== */
 // special for larger screens

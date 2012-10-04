@@ -1,9 +1,10 @@
 function Twitter() {
+    this.init_time = (new Date()).getTime(); // when the Twitter obj was created (for reporting)
     this.start_time = 0; // time last search ended
     this.end_time = (new Date()).getTime(); // time next search starts
     this.new_search = false; // lets UI know when a new search has been done
     
-    this.min_update_interval = 500;
+    this.min_update_interval = 1000;
     this.update_interval = this.min_update_interval; // = max(min_update * # of searches, 1000)
     this.error = false;
     this.error_add_to_interval = 10000; // amount to slow down updates when you run into an over-rate error
@@ -17,18 +18,20 @@ function Twitter() {
 Twitter.prototype.update = function() {
     for (var i = 0; i < SEARCHES.length; i++) {
         var search = SEARCHES[i];
-        TWITTER.update_thread(search);
+        // if final search, let the UI know that there's new data
+        if (i === SEARCHES.length -1) { TWITTER.update_thread(search, true); }
+        else { TWITTER.update_thread(search); }
     }
     setTimeout(TWITTER.update, TWITTER.update_interval);
     TWITTER.start_time = TWITTER.end_time;
     TWITTER.end_time = (new Date()).getTime() + TWITTER.update_interval;
-    UI.update();
 }
-Twitter.prototype.update_thread = function(search) {
+Twitter.prototype.update_thread = function(search, final) {
     var encoded_search = enc_name(search);
     var initial_tweet_count = TWITTER.tweets[encoded_search].length;
     $.getJSON("http://search.twitter.com/search.json?q="+encodeURIComponent(search)+"&rpp=100&callback=?", function(data) {
         if (data.error !== undefined && !TWITTER.error) {
+            mixpanel.track("ERROR: Twitter over rate", {"on_duration": ((new Date()).getTime() - TWITTER.init_time)/1000});
             TWITTER.error = true;
             TWITTER.update_interval += TWITTER.error_add_to_interval;
             alert("Twitter rate limit exceeded - slowing refresh interval. "
@@ -47,8 +50,8 @@ Twitter.prototype.update_thread = function(search) {
         if (TWITTER.tweets[encoded_search] !== undefined) {
             var tps = (TWITTER.tweets[encoded_search].length - initial_tweet_count) * 1000 / TWITTER.update_interval;
             TWITTER.tweets_per_second[encoded_search].unshift(tps);
-            TWITTER.new_search = true;
         }
+        if (final) { TWITTER.new_search = true; }
     });
 }
 
@@ -104,6 +107,7 @@ Twitter.prototype.add_search = function(name) {
             UI.add_search(name);
         }
         TWITTER.update_interval = Math.max(TWITTER.min_update_interval * SEARCHES.length, 1000);
+        mixpanel.track("Search added", {"term": name, "total": SEARCHES.length});
     }
 }
 // remove search from monitor and delete all related data
@@ -140,5 +144,6 @@ Twitter.prototype.remove_search = function(name) {
                 i -= 1;
             }
         }
+        mixpanel.track("Search removed", {"term": name, "total": SEARCHES.length});
     }
 }

@@ -65,3 +65,9 @@ function hexify(num, digits) {
     while (num.length < digits) { num = "0" + num; }
     return num;
 }
+// from http://stackoverflow.com/questions/2901102/how-to-print-number-with-commas-as-thousands-separators-in-javascript
+function coma_number(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}

@@ -20,11 +20,13 @@ function Ui() {
     this.loading = new loading();
     this.page_width = $("#pages").width();
     this.charts = []; // list of all charts managed by the UI
+    this.tps_chart = null;
     
     this.tweet_queue = []; // queue of tweets to display
     this.tweet_display_speed = 1000; // will be shortened if there's a long queue to display
-    this.tweet_display_min_speed = 500; // minimum amount of time to show each new tweet
+    this.tweet_display_min_speed = 250; // minimum amount of time to show each new tweet
     this.tweet_display_max_count = 30; // maximum number of tweets to show in DOM before removing old ones
+    this.tweet_mode = "stream";
 }
 
 Ui.prototype.update = function(interval) {
@@ -49,13 +51,13 @@ Ui.prototype.update = function(interval) {
     for (var i = 0; i < SEARCHES.length; i++) {
         var search = SEARCHES[i];
         var encoded_search = enc_name(search);
-        $("#"+encoded_search+"_listing .tweet_count").text(String(TWITTER.tweets[encoded_search].length));
+        $("#"+encoded_search+"_listing .tweet_count").text(coma_number(TWITTER.tweets[encoded_search].length));
         $('.color'+i).css('background-color', COLORS[i])
                 .css('stroke', COLORS[i]);
         total_tweets += TWITTER.tweets[encoded_search].length;
     }
-    $("#total_tweets").text(total_tweets);
-    $("#cross_tweets").text(TWITTER.cross_tweets.length);
+    $("#total_tweets").text(coma_number(total_tweets));
+    $("#cross_tweets").text(coma_number(TWITTER.cross_tweets.length));
     if (interval) {
         setTimeout(function() {UI.update(interval);}, interval);
     }
@@ -64,11 +66,12 @@ Ui.prototype.update = function(interval) {
 /* UI interaction events */
 $(".tab").click(function() {
     if (!$(this).hasClass("active_tab")) {
-        // hide old active tab & page
+        // hide old active tab & page, report to mixpanel
         if ($(".active_tab").length > 0) {
             var page_id = $(".active_tab").text($(".active_tab").text().replace("> ", "").replace(" <", ""))
                             .removeClass("active_tab").attr('id').replace("_tab", "_page");
             $("#"+page_id).hide().css('visibility', 'hidden');
+            mixpanel.track("Nav", {"page": $(this).text()});
         }
         // show new
         var page_id = $(this).text("> " + $(this).text() + " <")
@@ -102,6 +105,16 @@ $("#add_search_button").click(function() {
         $("#add_search_field").val("");
     }
 });
+$("#tweet_mode_toggle").click(function() {
+    if ($(this).text() === "Read Mode") {
+        $(this).text("Stream Mode");
+        UI.tweet_mode = "read";
+    } else {
+        $(this).text("Read Mode");
+        UI.tweet_mode = "stream";
+    }
+});
+// these use $(document) to dynamically add listeners to new objects
 $(document).on("click", ".del_search_button", function() {
     var search = $(this).parent().children(".term").text();
     $(this).parent().remove();
@@ -129,7 +142,7 @@ Ui.prototype.add_tweet = function(tweet) {
 }
 Ui.prototype.display_next_tweet = function() {
     var display_speed = UI.tweet_display_speed;
-    if (UI.tweet_queue.length > 0 && !$('#tweets_page').is(":hidden")) {
+    if (UI.tweet_queue.length > 0 && !$('#tweets_page').is(":hidden") && UI.tweet_mode === "stream") {
         var tweet = UI.tweet_queue.pop();
         // if there's a big queue to display, move faster (but still with a delay)
         display_speed = Math.max(display_speed - (UI.tweet_queue.length * 10), UI.tweet_display_min_speed);
@@ -149,14 +162,20 @@ Ui.prototype.display_next_tweet = function() {
         div.html(text);
         $("#tweets").prepend(div);
         $(div).hide().fadeIn(display_speed);
+        
+        var displayed_tweets = $(".tweet").length;
         // if too many tweets in DOM, remove old ones
-        if ($(".tweet").length > UI.tweet_display_max_count) {
+        if (displayed_tweets > UI.tweet_display_max_count) {
             $(".tweet:last").remove();
         }
+        // if multiple tweets, show scroll to top button
+        if (displayed_tweets > 2) { $("#tweets_to_top").show(); }
+        else { $("#tweets_to_top").hide(); }
     }
     setTimeout(UI.display_next_tweet, display_speed);
 }
 Ui.prototype.add_tps_chart = function() {
-    UI.charts.push(new tps_chart());
+    UI.tps_chart = new tps_chart();
+    UI.charts.push(UI.tps_chart);
     UI.update();
 }
