@@ -1,17 +1,16 @@
-var UI;
-var TWITTER;
-var CHARTS;
-var SEARCHES = []; // all searches currently running
+var UI; // UI object
+var TWITTER; // Twitter object
+var SEARCHES = []; // all searches currently running, as plain english
 var COLORS = []; // the color for each search term
 
 $(document).ready(function() {
     UI = new Ui();
     window.onresize(); // make sure the UI fits the screen
     TWITTER = new Twitter();
-    TWITTER.add_search("apple");
-    TWITTER.add_search("iphone");
+    TWITTER.add_search("romney");
+    TWITTER.add_search("obama");
     TWITTER.update(); // begins fetching twitter data
-    UI.update(true); // start having UI update regularly
+    UI.update(1000); // start having UI update regularly (every 1000ms)
     UI.display_next_tweet(); // start the tweet display function
     $("#analytics_tab").click();
 });
@@ -29,3 +28,4 @@ function onTrendData(data) {
         }
     }
 }
+

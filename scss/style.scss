@@ -1,7 +1,7 @@
 @import "specials";
 
 /* ==positioning (adaptive)== */
-// default: 960px or wider
+// by default, assumes a screen of 960px or wider
 #content {
     height: 100%;
     overflow: scroll;
@@ -10,10 +10,6 @@
 #top {
     position: fixed;
     top: 0px;
-}
-#logo img {
-    height: 73px;
-    width: 235px;
 }
 #search_bar {
     position: fixed;
@@ -117,13 +113,9 @@ button {
     #tabs div {
         padding: 2px 0px;
         text-decoration: none;
-        &:hover {
-            cursor: pointer;
-            text-decoration: underline;
-        }
     }
 }
-// to make logo retina-compatible
+// make logo image retina-compatible
 #logo_img {
     width: 235px;
     height: 73px;
@@ -140,6 +132,7 @@ only screen and (min-device-pixel-ratio: 2) {
         background-size: 235px 73px;
     }
 }
+
 /* Search Column */
 #search_bar {
     overflow: hidden;
@@ -203,18 +196,32 @@ only screen and (min-device-pixel-ratio: 2) {
     margin: 0px;
 }
 /* ===Size-dependent styling=== */
+// special for larger screens
 @media only screen and (min-width: 768px) {
-    body { // background not shown
+    // only show the backgroun if it'll be shown!
+    body {
         background-image: url('../img/bg.jpg');
     }
-    #top { // performance issues on mobile
+    // box shadow has performance issues on mobile
+    #top {
         @include box_shadow(0px, 4px, 4px, -2px, #232323);
     }
-    .tweet:hover { // no point having hover on a touch device
+    // only have hover if you're not on a touch device
+    #top #tabs div:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    .tweet:hover {
         background: $cl-hvrbg;
         -webkit-transition: background .2s linear;
         -moz-transition: background .2s linear;
         -ms-transition: background .2s linear;
         transition: background .2s linear;
+    }
+}
+@media only screen and (max-width: 767px) {
+    // remove ugly link highlighting from nav tabs - give it that native feel!
+    div {
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
 }

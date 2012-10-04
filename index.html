@@ -4,9 +4,9 @@
         <title>Twitter Pulse</title>
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
             
-        <link href="css/skeleton.css" rel="stylesheet">
-        <link href='http://fonts.googleapis.com/css?family=Quantico|Oxygen' rel='stylesheet' type='text/css'>
-        <link href="css/style.css" rel="stylesheet">
+        <link href="css/skeleton.css" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Quantico|Oxygen" rel="stylesheet" type="text/css">
+        <link href="css/style.css" rel="stylesheet" type="text/css">
     </head>
     
     <body>
@@ -46,8 +46,9 @@
                     
                     <div id="about_page" class="page">
                         <p>Tweet Pulse enables you to track, in real time, Twitter activity on individual search topics.</p>
-                        <p>But it doesn't stop there. Tweet Pulse also provides powerful analytics to let you observe how your topics interact in the Twitter-sphere.</p>
+                        <p>Tweet Pulse also provides analytics to let you observe how your topics interact in the Twitter-sphere.</p>
                         <p>Tweet Pulse is built entirely in Javascript and runs on your computer or phone, without a server.</p>
+                        <p>Built by <a href="http://toddmedema.com">Todd Medema</a> - I'd love to hear your feedback!</p>
                     </div>
                 </div>
             </div>
@@ -62,5 +63,16 @@
         <script type="text/javascript" src="js/d3.v2.js"></script>
         <script type="text/javascript" src="js/tps_chart.js"></script>
         <script src="https://api.twitter.com/1/trends/1.json?callback=onTrendData"></script>
+        
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-17272933-2']);
+            _gaq.push(['_trackPageview']);
+            (function() {
+              var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+              ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+              var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
     </body>
 </html>

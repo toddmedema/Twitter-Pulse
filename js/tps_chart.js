@@ -30,18 +30,15 @@ tps_chart.prototype.update = function() {
                 .interpolate("basis");
     for (var i = 0; i < SEARCHES.length; i++) {
         var data = this.data[enc_name(SEARCHES[i])].slice(0, this.num_to_show);
-        
-        
-        this.chart.append("svg:path").attr("d", line(data)).attr("class", "chart_line, color"+i).style("fill", "rgba(0,0,0,0)");
+        this.chart.append("svg:path").attr("d", line(data))
+                .attr("class", "chart_line, color"+i)
+                .style("fill", 'rgba(0,0,0,0)');
     }
 }
 tps_chart.prototype.resize = function() {
-    if ($("#pages").width() !== this.width) {
-        this.width = $("#pages").width();
-        this.chart.attr("width", this.width);
-        this.draw_text();
-        this.update();
-    }
+    this.width = $("#pages").width();
+    this.chart.attr("width", this.width);
+    this.draw_text();
 }
 // regenerate axis (scales to match data range across all searches)
 tps_chart.prototype.draw_axis = function() {

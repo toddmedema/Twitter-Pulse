@@ -1,12 +1,15 @@
 function Twitter() {
-    this.update_interval = 5000;
-    this.new_search = false; // lets UI know when a new search has been done
-    this.error = false;
-    this.tweets = {}; // list tweets for each search term
-    this.cross_tweets = []; // tweets that show up under multiple terms
-    this.tweets_per_second = {}; // history of tweets per second, per search term
     this.start_time = 0; // time last search ended
     this.end_time = (new Date()).getTime(); // time next search starts
+    this.new_search = false; // lets UI know when a new search has been done
+    
+    this.update_interval = 2000;
+    this.error = false;
+    this.error_add_to_interval = 10000; // amount to slow down updates when you run into an over-rate error
+    
+    this.tweets = {}; // list of tweet hashes for each search term
+    this.cross_tweets = []; // hash of tweets that show up under multiple terms
+    this.tweets_per_second = {}; // history of tweets per second, per search term
 }
     
 // check for new tweets
@@ -26,13 +29,14 @@ Twitter.prototype.update_thread = function(search) {
     $.getJSON("http://search.twitter.com/search.json?q="+encodeURIComponent(search)+"&rpp=100&callback=?", function(data) {
         if (data.error !== undefined && !TWITTER.error) {
             TWITTER.error = true;
-            TWITTER.update_interval *= 2;
+            TWITTER.update_interval += TWITTER.error_add_to_interval;
             alert("Twitter rate limit exceeded - slowing refresh interval. "
                  +"To return to normal speed, please reduce your number of searches.");
+        } else {
+            $(data.results).each(function(i,v) {
+                TWITTER.add_tweet(search, this);
+            });
         }
-        $(data.results).each(function(i,v) {
-            TWITTER.add_tweet(search, this);
-        });
         // make sure the search hasn't been deleted, then store tps data
         if (TWITTER.tweets[encoded_search] !== undefined) {
             var tps = (TWITTER.tweets[encoded_search].length - initial_tweet_count) * 1000 / TWITTER.update_interval;
@@ -102,7 +106,7 @@ Twitter.prototype.remove_search = function(name) {
         // if the refresh rate has been slowed due to an error, reset
         if (TWITTER.error) {
             TWITTER.error = false;
-            TWITTER.update_interval /= 2;
+            TWITTER.update_interval -= TWITTER.error_add_to_interval;
         }
         var encoded_search = enc_name(name);
         SEARCHES.splice(index, 1);
