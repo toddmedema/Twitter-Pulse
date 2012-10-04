@@ -48,7 +48,10 @@ function loading() {
             }
             current_percent = percent;
             if (current_percent * canvas.width >= radius) {
-                draw_rrectangle(ctx, 1, 1, current_percent * canvas.width, canvas.height-2, radius, "fill");
+                // have the loading bar turn red if the user is current rate-limited
+                if (TWITTER.error) { ctx.fillStyle = "#FF0000"; }
+                else { ctx.fillStyle = "#FFFFFF"; }
+                draw_rrectangle(ctx, 1, 1, current_percent * canvas.width, canvas.height-1, radius, "fill");
             }
             TWITTER.till_next_search -= fps;
         }

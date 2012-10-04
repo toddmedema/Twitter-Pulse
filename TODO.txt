@@ -1,0 +1,24 @@
+full: 60px/col
+959-768: 48px/col
+<767: all in one col, width: 100%
+
+
+TODO
+timing on chart+data still glitchy
+- perhaps don't update the chart by TWITTER?
+use tweet timing data to generate historical info
+give user the option to view graph at multiple scales
+
+make buttons, etc bigger on small displays
+ability to show + hide trending topics on mobile
+ability to (or background?) refresh of trending?
+
+Two view modes for Tweets - "live stream" and "click to view more"
+
+Dream:
+Have links in tweets be actual links
+Other analytics/visualizations like % of each term that shows up in cross-search tweets?
+
+animate tps graph instead of complete redraw
+- would need to handle re-scales somehow
+- http://blog.visual.ly/creating-animations-and-transitions-with-d3-js/

@@ -3,7 +3,8 @@ function Twitter() {
     this.end_time = (new Date()).getTime(); // time next search starts
     this.new_search = false; // lets UI know when a new search has been done
     
-    this.update_interval = 2000;
+    this.min_update_interval = 500;
+    this.update_interval = this.min_update_interval; // = max(min_update * # of searches, 1000)
     this.error = false;
     this.error_add_to_interval = 10000; // amount to slow down updates when you run into an over-rate error
     
@@ -36,6 +37,11 @@ Twitter.prototype.update_thread = function(search) {
             $(data.results).each(function(i,v) {
                 TWITTER.add_tweet(search, this);
             });
+        }
+        // if a fresh search isn't getting errors, go back to normal
+        if (data.error === undefined && TWITTER.error && !TWITTER.new_search) {
+            TWITTER.error = false;
+            TWITTER.update_interval -= TWITTER.error_add_to_interval;
         }
         // make sure the search hasn't been deleted, then store tps data
         if (TWITTER.tweets[encoded_search] !== undefined) {
@@ -97,6 +103,7 @@ Twitter.prototype.add_search = function(name) {
             TWITTER.tweets_per_second[encoded_search] = [0];
             UI.add_search(name);
         }
+        TWITTER.update_interval = Math.max(TWITTER.min_update_interval * SEARCHES.length, 1000);
     }
 }
 // remove search from monitor and delete all related data
@@ -117,5 +124,21 @@ Twitter.prototype.remove_search = function(name) {
         }
         delete TWITTER.tweets[encoded_search];
         delete TWITTER.tweets_per_second[encoded_search];
+        TWITTER.update_interval = Math.max(TWITTER.min_update_interval * SEARCHES.length, 1000);
+        
+        // remove tweets from the UI display queue if they have less than 2 keywords besides the one you just removed
+        for (var i = 0; i < UI.tweet_queue.length; i++) {
+            var tweet = UI.tweet_queue[i];
+            var keywords = tweet.keywords.length;
+            for (var k = 0; k < keywords; k++) {
+                if (SEARCHES.indexOf(tweet.keywords[k]) === -1) {
+                    keywords -= 1;
+                }
+            }
+            if (keywords < 2) {
+                UI.tweet_queue.splice(i, 1);
+                i -= 1;
+            }
+        }
     }
 }

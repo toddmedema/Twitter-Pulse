@@ -45,13 +45,17 @@ Ui.prototype.update = function(interval) {
         UI.charts[i].update();
     }
     // update tweet #'s and search colors for chart lines
+    var total_tweets = 0;
     for (var i = 0; i < SEARCHES.length; i++) {
         var search = SEARCHES[i];
         var encoded_search = enc_name(search);
-        $("#"+encoded_search+"_listing .tweet_count").html(String(TWITTER.tweets[encoded_search].length));
+        $("#"+encoded_search+"_listing .tweet_count").text(String(TWITTER.tweets[encoded_search].length));
         $('.color'+i).css('background-color', COLORS[i])
                 .css('stroke', COLORS[i]);
+        total_tweets += TWITTER.tweets[encoded_search].length;
     }
+    $("#total_tweets").text(total_tweets);
+    $("#cross_tweets").text(TWITTER.cross_tweets.length);
     if (interval) {
         setTimeout(function() {UI.update(interval);}, interval);
     }
@@ -126,9 +130,10 @@ Ui.prototype.add_tweet = function(tweet) {
 Ui.prototype.display_next_tweet = function() {
     var display_speed = UI.tweet_display_speed;
     if (UI.tweet_queue.length > 0 && !$('#tweets_page').is(":hidden")) {
+        var tweet = UI.tweet_queue.pop();
         // if there's a big queue to display, move faster (but still with a delay)
         display_speed = Math.max(display_speed - (UI.tweet_queue.length * 10), UI.tweet_display_min_speed);
-        var tweet = UI.tweet_queue.pop();
+        
         var div = $("<div class='tweet'></div>");
         var text = $("<p>" + tweet.text + "<br/>- </p>");
         var link = $("<a href='http://twitter.com/" + tweet.from_user + "'>" + tweet.from_user + "</a> ");
@@ -140,7 +145,6 @@ Ui.prototype.display_next_tweet = function() {
                 keywords.append($("<div class='color_block'></div>"));
             }
         }
-        
         text.append(keywords).append(link);
         div.html(text);
         $("#tweets").prepend(div);
