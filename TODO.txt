@@ -4,34 +4,6 @@ full: 60px/col
 
 
 TODO
-
-on read mode, add refresh button
-- on stream mode, remove refresh button
-code refresh button! (basically immediately add
-    max_tweets to UI)
-
-use icon font for + search, refresh button
-
-Get domain, re-brand
-*twittermind
-*twitterglasses
-*twitterpulses
-*macrotweet
--tweet/twitter
--map/glass/eye/pulse/beat/vision/mind/detective
-
-Two view modes for Tweets - "live stream" and "click to view more"
-- mixpanel track
-
-BUG:
-if the page is created small, won't align when enlarged
-
-Homepage explaining what it does?
-
-give user the option to view graph at multiple scales
-
-make buttons, etc bigger on small displays
-
 let users filter (ie "show only tweets that contain" then
     a checkmark list of all tweet searches)
     - will need to restructure tweet storage so that
@@ -39,10 +11,24 @@ let users filter (ie "show only tweets that contain" then
     - might also enable other analytics like
         "related terms"
 
-Other analytics/visualizations like % of each term that shows up in cross-search tweets?
+make buttons, etc bigger on small displays
+- try using width: -webkit-calc(350px - 50px); for noJS scaling
 
-One use: monitor total conversation traffic about
-        diff topics
+Share w/Woycheck to put out to world!
+
+for performance, use counters to keep track of tweet
+    #'s and limit array sizes (except tps history)
+
+BUG: if the page is created small, nav won't align when enlarged
+- phone switch portrait to landscape
+
+give user the option to view graph at multiple scales
+ - just need to change its width and update it
+Other analytics/visualizations like % of each term that shows up in cross-search tweets?
+ - average tps per topic
+ 
+If tweet error, only do one test search to check if resolved,
+   instead of trying to search for all topics
 
 Dream:
 use tweet timing data to generate historical info
@@ -52,3 +38,7 @@ ability to show + hide trending topics on mobile
 animate tps graph instead of complete redraw
 - would need to handle re-scales somehow
 - http://blog.visual.ly/creating-animations-and-transitions-with-d3-js/
+
+USES:
+- monitor total convers traf on diff topics
+- read & monitor complex topics

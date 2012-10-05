@@ -42,16 +42,24 @@ function loading() {
             var current_time = (new Date()).getTime();
             var percent = (1 - ((TWITTER.end_time - current_time) / TWITTER.update_interval));
             if (percent > 1) { percent = 1; }
-            if (current_percent > percent) {
+            if (current_percent > percent || TWITTER.error) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 draw_rrectangle(ctx, 0, 0, canvas.width, canvas.height, radius, "stroke");
             }
             current_percent = percent;
+            var width = current_percent * canvas.width;
+            if (width >= canvas.width) { width = canvas.width - 1; }
             if (current_percent * canvas.width >= radius) {
                 // have the loading bar turn red if the user is current rate-limited
                 if (TWITTER.error) { ctx.fillStyle = "#FF0000"; }
                 else { ctx.fillStyle = "#FFFFFF"; }
-                draw_rrectangle(ctx, 1, 1, current_percent * canvas.width, canvas.height-1, radius, "fill");
+                draw_rrectangle(ctx, 0, 1, width, canvas.height-1, radius, "fill");
+            }
+            if (TWITTER.error) {
+                ctx.fillStyle = "#000000";
+                ctx.textAlign = "center";
+                ctx.font = '16px sans-serif';
+                ctx.fillText("Waiting on Twitter", canvas.width/2, canvas.height/2 + 6);
             }
             TWITTER.till_next_search -= fps;
         }

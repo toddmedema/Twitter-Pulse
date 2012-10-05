@@ -14,6 +14,7 @@ $(document).ready(function() {
     UI.display_next_tweet(); // start the tweet display function
     $("#analytics_tab").click();
     update_trending();
+    new NoClickDelay($('button'));
 });
 
 // loads & displays trending topics as suggestions to user, refreshes once per minute
@@ -26,15 +27,16 @@ function update_trending() {
             for (var loc = 0; loc < data.length; loc++) {
                 for (var i = 0; i < data[loc]["trends"].length; i++) {
                     var name = data[loc]["trends"][i]["name"];
-                    var encoded_name = enc_name(name);
-                    var add = $("<button><div>+</div></button>").attr("id", encoded_name+"_add").addClass("add_trending_button");
-                    var text = $("<span class='term'>" + name + "</span>");
-                    var div = $("<div></div>").attr("id", encoded_name).append(add).append(text);
-                    $("#trending").prepend(div);
+                    if (SEARCHES.indexOf(name.toLowerCase()) === -1) {
+                        var encoded_name = enc_name(name);
+                        var add = $("<button><div>+</div></button>").attr("id", encoded_name+"_add").addClass("add_trending_button");
+                        var text = $("<span class='term'>" + name + "</span>");
+                        var div = $("<div></div>").attr("id", encoded_name).append(add).append(text);
+                        $("#trending").prepend(div);
+                    }
                 }
             } 
         }
     });
     setTimeout(update_trending, 60000);
 }
-

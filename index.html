@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Twitter Pulse</title>
+        <title>MacroTweet</title>
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
             
         <link href="css/skeleton.css" rel="stylesheet" type="text/css">
         <link href="http://fonts.googleapis.com/css?family=Quantico|Oxygen" rel="stylesheet" type="text/css">
         <link href="css/style.css" rel="stylesheet" type="text/css">
             
-        <!-- start Mixpanel --><script type="text/javascript">(function(c,a){window.mixpanel=a;var b,d,h,e;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===c.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.1.min.js';d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d);a._i=[];a.init=function(b,c,f){function d(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]);a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var g=a;"undefined"!==typeof f?
-g=a[f]=[]:f="mixpanel";g.people=g.people||[];h="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config people.identify people.set people.increment".split(" ");for(e=0;e<h.length;e++)d(g,h[e]);a._i.push([b,c,f])};a.__SV=1.1})(document,window.mixpanel||[]);
-mixpanel.init("97c94fa091cbd4def1868f9c79217edd");</script><!-- end Mixpanel -->
+        <script type="text/javascript" src="mixpanel.js"></script>
     </head>
     
     <body>
@@ -50,19 +48,22 @@ mixpanel.init("97c94fa091cbd4def1868f9c79217edd");</script><!-- end Mixpanel -->
                     
                     <div id="tweets_page" class="page">
                         <div id="tweet_modes">
+                            <span id="tweet_view_error">(waiting on Twitter) </span>
+                            <button id="new_read_tweets">load <span id="new_tweet_count">0</span> new tweets</button>
                             <button id="tweet_mode_toggle">Read Mode</button>
                         </div>
                         <div id="tweets"></div>
-                        <a href="#" id="tweets_to_top" onclick="$('#content').animate({scrollTop : 0},'fast');">Return to top</a>
+                        <div id="tweets_to_top">
+                            <a href="#" onclick="$('#content').animate({scrollTop : 0},'fast');">Return to top</a>
+                        </div>
                     </div>
                     
                     <div id="about_page" class="page">
-                        <p>Tweet Pulse enables you to track, in real time, Twitter activity on individual search topics,
-                            as well view analytics that let you observe how your topics interact in the Twitter-sphere.</p>
-                        <p>Due to Twitter restrictions, having too many search terms can result in incomplete data for high-volume trends.</p>
-                        <p>Tweet Pulse is built entirely in Javascript and runs on computers, tablets and phones without a server.</p>
+                        <p>Macro Tweet enables you to track, in real time, Twitter activity on individual search topics on the Analytics page.</p>
+                        <p>Use the Tweets page to see tweets that contain multiple topics, giving you a feel for the conversation.</p>
+                        <p>Macro Tweet is built entirely in Javascript and runs on computers, tablets and phones without a server.</p>
                         <p>Built by <a href="http://toddmedema.com">Todd Medema</a> - I'd love to hear your feedback!</p>
-                        <p>Help support the development of TweetAura:</p>
+                        <p>Help support the development of TwitterPulse:</p>
                         <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                             <input type="hidden" name="cmd" value="_s-xclick">
                             <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
@@ -86,13 +87,13 @@ mixpanel.init("97c94fa091cbd4def1868f9c79217edd");</script><!-- end Mixpanel -->
         
         <script type="text/javascript">
             var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-17272933-2']);
+            _gaq.push(['_setAccount', 'UA-17272933-14']);
             _gaq.push(['_trackPageview']);
             (function() {
               var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
               ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
               var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
             })();
-        </script>
+          </script>
     </body>
 </html>

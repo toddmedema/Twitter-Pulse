@@ -31,11 +31,7 @@ Twitter.prototype.update_thread = function(search, final) {
     var initial_tweet_count = TWITTER.tweets[encoded_search].length;
     $.getJSON("http://search.twitter.com/search.json?q="+encodeURIComponent(search)+"&rpp=100&callback=?", function(data) {
         if (data.error !== undefined && !TWITTER.error) {
-            mixpanel.track("ERROR: Twitter over rate", {"on_duration": ((new Date()).getTime() - TWITTER.init_time)/1000});
-            TWITTER.error = true;
-            TWITTER.update_interval += TWITTER.error_add_to_interval;
-            alert("Twitter rate limit exceeded - slowing refresh interval. "
-                 +"To return to normal speed, please reduce your number of searches.");
+            TWITTER.on_error();
         } else {
             $(data.results).each(function(i,v) {
                 TWITTER.add_tweet(search, this);
@@ -43,8 +39,7 @@ Twitter.prototype.update_thread = function(search, final) {
         }
         // if a fresh search isn't getting errors, go back to normal
         if (data.error === undefined && TWITTER.error && !TWITTER.new_search) {
-            TWITTER.error = false;
-            TWITTER.update_interval -= TWITTER.error_add_to_interval;
+            TWITTER.off_error();
         }
         // make sure the search hasn't been deleted, then store tps data
         if (TWITTER.tweets[encoded_search] !== undefined) {
@@ -53,6 +48,18 @@ Twitter.prototype.update_thread = function(search, final) {
         }
         if (final) { TWITTER.new_search = true; }
     });
+}
+// when a Twitter over-rate error happens, or is resolved
+Twitter.prototype.on_error = function() {
+    mixpanel.track("ERROR: Twitter over rate", {"on_duration": ((new Date()).getTime() - TWITTER.init_time)/1000});
+    TWITTER.error = true;
+    TWITTER.update_interval += TWITTER.error_add_to_interval;
+    $("#tweet_view_error").show();
+}
+Twitter.prototype.off_error = function() {
+    TWITTER.error = false;
+    TWITTER.update_interval -= TWITTER.error_add_to_interval;
+    $("#tweet_view_error").hide();
 }
 
 // tracks another tweet - if it was already found, show as cross-topic
@@ -114,11 +121,6 @@ Twitter.prototype.add_search = function(name) {
 Twitter.prototype.remove_search = function(name) {
     var index = SEARCHES.indexOf(name);
     if (index != -1) {
-        // if the refresh rate has been slowed due to an error, reset
-        if (TWITTER.error) {
-            TWITTER.error = false;
-            TWITTER.update_interval -= TWITTER.error_add_to_interval;
-        }
         var encoded_search = enc_name(name);
         SEARCHES.splice(index, 1);
         // preserve other terms' colors

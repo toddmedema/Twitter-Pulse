@@ -4,7 +4,8 @@
 // by default, assumes a screen of 960px or wider
 #content {
     height: 100%;
-    overflow: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
 }
 #top {
@@ -41,9 +42,6 @@
         position: relative;
         top: 0px;
         left: 0px;
-    }
-    #logo img {
-        width: 100%;
     }
     .container, .column, .columns {
         width: 100% !important;
@@ -117,8 +115,8 @@ button {
 }
 // make logo image retina-compatible
 #logo_img {
-    width: 235px;
-    height: 73px;
+    width: 275px;
+    height: 75px;
     margin: auto;
     margin-bottom: 3px;
     background: url('../img/logo.png');
@@ -129,7 +127,7 @@ only screen and (-webkit-min-device-pixel-ratio: 2),
 only screen and (min-device-pixel-ratio: 2) {
     #logo_img {
         background: url('../img/logo_double_size.png');
-        background-size: 235px 73px;
+        background-size: 275px 75px;
     }
 }
 
@@ -185,9 +183,15 @@ only screen and (min-device-pixel-ratio: 2) {
 }
 
 /* Tweets */
-#tweet_mode_toggle {
+#tweet_modes {
     margin: 0px;
     float: right;
+}
+#new_read_tweets, #tweet_view_error {
+    display: none;
+}
+#tweet_view_error {
+    color: #F00;
 }
 #tweets {
     padding-top: 32px;
@@ -204,6 +208,8 @@ only screen and (min-device-pixel-ratio: 2) {
 }
 #tweets_to_top {
     display: none;
+    padding: 0px 0px 10px 0px;
+    text-align: center;
 }
 /* ===Size-dependent styling=== */
 // special for larger screens
@@ -220,13 +226,6 @@ only screen and (min-device-pixel-ratio: 2) {
     #top #tabs div:hover {
         cursor: pointer;
         text-decoration: underline;
-    }
-    .tweet:hover {
-        background: $cl-hvrbg;
-        -webkit-transition: background .2s linear;
-        -moz-transition: background .2s linear;
-        -ms-transition: background .2s linear;
-        transition: background .2s linear;
     }
 }
 @media only screen and (max-width: 767px) {
