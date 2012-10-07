@@ -4,8 +4,7 @@
 // by default, assumes a screen of 960px or wider
 #content {
     height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: auto;
     position: relative;
 }
 #top {
@@ -91,6 +90,7 @@ h2 {
     color: $cl-blurfnt;
 }
 button {
+    font-size: 12px;
     background-color: $cl-mainbg;
     &:hover { background-color: $cl-hvrbg; }
     &:active { background-color: $cl-slctbg; }
@@ -150,6 +150,7 @@ only screen and (min-device-pixel-ratio: 2) {
 .del_search_button {
     padding: 1px;
     margin: 0px 5px 0px 0px;
+    font-size: 14px;
 }
 .color_block {
     width: 10px;
@@ -161,9 +162,10 @@ only screen and (min-device-pixel-ratio: 2) {
     margin: 6px 0px 0px 0px;
 }
 .add_trending_button {
-    padding: 0px 1px 0px 2px;
+    padding: 0px 1px 0px 1px;
     margin: 0px 5px 0px 0px;
     font-weight: bold;
+    font-size: 14px;
 }
 
 /* Analytics */
@@ -200,7 +202,7 @@ only screen and (min-device-pixel-ratio: 2) {
     color: #F00;
 }
 #tweets {
-    padding-top: 32px;
+    padding-top: 34px;
 }
 .tweet {
     padding: 0px 5px;
@@ -211,6 +213,9 @@ only screen and (min-device-pixel-ratio: 2) {
 .tweet p {
     padding: 0px;
     margin: 0px;
+}
+.tweet .author {
+    color: $cl-blurfnt;
 }
 #tweets_to_top {
     display: none;
@@ -238,5 +243,9 @@ only screen and (min-device-pixel-ratio: 2) {
     // remove ugly link highlighting from nav tabs - give it that native feel!
     div {
         -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    // make buttons larger + easier to use
+    .del_search_button {
+        font-size: 16px;
     }
 }

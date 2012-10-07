@@ -29,7 +29,7 @@ function update_trending() {
                     var name = data[loc]["trends"][i]["name"];
                     if (SEARCHES.indexOf(name.toLowerCase()) === -1) {
                         var encoded_name = enc_name(name);
-                        var add = $("<button><div>+</div></button>").attr("id", encoded_name+"_add").addClass("add_trending_button");
+                        var add = $("<button>+</button>").attr("id", encoded_name+"_add").addClass("add_trending_button");
                         var text = $("<span class='term'>" + name + "</span>");
                         var div = $("<div></div>").attr("id", encoded_name).append(add).append(text);
                         $("#trending").prepend(div);

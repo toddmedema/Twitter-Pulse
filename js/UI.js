@@ -30,21 +30,21 @@ function Ui() {
 }
 
 Ui.prototype.update = function(interval) {
+    if (TWITTER !== undefined && interval) {
+        // if no new data from Twitter, fill in data to keep the chart moving
+        if (!TWITTER.new_search) {
+            for (var i = 0; i < SEARCHES.length; i++) {
+                var encoded_search = enc_name(SEARCHES[i]);
+                var current = TWITTER.tweets_per_second[encoded_search][0];
+                if (TWITTER.error) { current = 0; }
+                TWITTER.tweets_per_second[encoded_search].unshift(current);
+            }
+        } else {
+            TWITTER.new_search = false;
+        }
+    }
     // analytics page only
     if (!$('#analytics_page').is(":hidden")) {
-        if (TWITTER !== undefined && interval) {
-            // if no new data from Twitter, fill in data to keep the chart moving
-            if (!TWITTER.new_search) {
-                for (var i = 0; i < SEARCHES.length; i++) {
-                    var encoded_search = enc_name(SEARCHES[i]);
-                    var current = TWITTER.tweets_per_second[encoded_search][0];
-                    if (TWITTER.error) { current = 0; }
-                    TWITTER.tweets_per_second[encoded_search].unshift(current);
-                }
-            } else {
-                TWITTER.new_search = false;
-            }
-        }
         // update charts
         for (var i = 0; i < UI.charts.length; i++) {
             UI.charts[i].update();
@@ -190,8 +190,8 @@ Ui.prototype.display_next_tweet = function() {
 }
 Ui.prototype._add_tweet_to_ui = function(tweet) {
     var div = $("<div class='tweet'></div>");
-    var text = $("<p>" + tweet.text + "<br/>- </p>");
-    var link = $("<a href='http://twitter.com/" + tweet.from_user + "'>" + tweet.from_user + "</a> ");
+    var text = $("<p>" + linkify(tweet.text) + "<br/>- </p>");
+    var link = $("<a href='http://twitter.com/" + tweet.from_user + "' target='_blank' class='author'>" + tweet.from_user + "</a> ");
     var keywords = $("<span class='keywords'></span>");
     for (var i = 0; i < SEARCHES.length; i++) {
         if (tweet.keywords.indexOf(SEARCHES[i]) !== -1) {

@@ -1,22 +1,12 @@
 TODO
-
-be able to take keyword list and fetch all tweets w/those keywords only
-
-
 let users filter (ie "show only tweets that contain" then
     a checkmark list of all tweet searches)
-    - will need to restructure tweet storage so that
-        tweet content isn't deleted once displayed
     - might also enable other analytics like
         "related terms"
-
-make buttons, etc bigger on small displays
-- try using width: -webkit-calc(350px - 50px); for noJS scaling
+    - have topic combos on analytics page link to displaying those tweets
 
 Share w/Woycheck to put out to world!
 
-BUG: if the page is created small, nav won't align when enlarged
-- phone switch portrait to landscape
 
 give user the option to view graph at multiple scales
  - just need to change its width and update it
@@ -27,9 +17,9 @@ If tweet error, only do one test search to check if resolved,
    instead of trying to search for all topics
 
 Dream:
+BUG: phone portrait->landscape, nav won't align when enlarged
 monitor timing throughout app and eliminate animations if slow
 use tweet timing data to generate more accurate + historical info
-Have links in tweets be actual links
 ability to show + hide trending topics on mobile
 
 animate tps graph instead of complete redraw
