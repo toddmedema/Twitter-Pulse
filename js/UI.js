@@ -30,39 +30,45 @@ function Ui() {
 }
 
 Ui.prototype.update = function(interval) {
-    if (TWITTER !== undefined && interval) {
-        // if no new data from Twitter, fill in data to keep the chart moving
-        if (!TWITTER.new_search) {
-            for (var i = 0; i < SEARCHES.length; i++) {
-                var encoded_search = enc_name(SEARCHES[i]);
-                var current = TWITTER.tweets_per_second[encoded_search][0];
-                if (TWITTER.error) { current = 0; }
-                TWITTER.tweets_per_second[encoded_search].unshift(current);
+    // analytics page only
+    if (!$('#analytics_page').is(":hidden")) {
+        if (TWITTER !== undefined && interval) {
+            // if no new data from Twitter, fill in data to keep the chart moving
+            if (!TWITTER.new_search) {
+                for (var i = 0; i < SEARCHES.length; i++) {
+                    var encoded_search = enc_name(SEARCHES[i]);
+                    var current = TWITTER.tweets_per_second[encoded_search][0];
+                    if (TWITTER.error) { current = 0; }
+                    TWITTER.tweets_per_second[encoded_search].unshift(current);
+                }
+            } else {
+                TWITTER.new_search = false;
             }
+        }
+        // update charts
+        for (var i = 0; i < UI.charts.length; i++) {
+            UI.charts[i].update();
+        }
+        $("#total_tweets").text(coma_number(TWITTER.tweets.length));
+        // show #'s per topic and topic combo
+        $("#per_topic").html("");
+        UI.relational_output(TWITTER.tweets_dict, "");
+    }
+    // tweets page only
+    if (!$('#tweets_page').is(":hidden")) {
+        if (UI.tweet_queue.length > UI.tweet_display_max_count) {
+            $("#new_tweet_count").text(coma_number(UI.tweet_display_max_count)+"+");
         } else {
-            TWITTER.new_search = false;
+            $("#new_tweet_count").text(coma_number(UI.tweet_queue.length));
         }
     }
-    // update charts
-    for (var i = 0; i < UI.charts.length; i++) {
-        UI.charts[i].update();
-    }
-    // update tweet #'s and search colors for chart lines
+    // update tweet #'s and search colors (search bar + charts)
     for (var i = 0; i < SEARCHES.length; i++) {
         var search = SEARCHES[i];
         var encoded_search = enc_name(search);
         $("#"+encoded_search+"_listing .tweet_count").text(coma_number(TWITTER.tweets_dict[search].total_count));
         $('.color'+i).css('background-color', COLORS[i])
                 .css('stroke', COLORS[i]);
-    }
-    $("#total_tweets").text(coma_number(TWITTER.tweets.length));
-    // show #'s per topic and topic combo
-    $("#per_topic").html("");
-    UI.relational_output(TWITTER.tweets_dict, "");
-    if (UI.tweet_queue.length > UI.tweet_display_max_count) {
-        $("#new_tweet_count").text(coma_number(UI.tweet_display_max_count)+"+");
-    } else {
-        $("#new_tweet_count").text(coma_number(UI.tweet_queue.length));
     }
     if (interval) {
         setTimeout(function() {UI.update(interval);}, interval);
