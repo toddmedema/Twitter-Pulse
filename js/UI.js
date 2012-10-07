@@ -48,17 +48,17 @@ Ui.prototype.update = function(interval) {
         UI.charts[i].update();
     }
     // update tweet #'s and search colors for chart lines
-    var total_tweets = 0;
     for (var i = 0; i < SEARCHES.length; i++) {
         var search = SEARCHES[i];
         var encoded_search = enc_name(search);
-        $("#"+encoded_search+"_listing .tweet_count").text(coma_number(TWITTER.tweets[encoded_search].length));
+        $("#"+encoded_search+"_listing .tweet_count").text(coma_number(TWITTER.tweets_dict[search].total_count));
         $('.color'+i).css('background-color', COLORS[i])
                 .css('stroke', COLORS[i]);
-        total_tweets += TWITTER.tweets[encoded_search].length;
     }
-    $("#total_tweets").text(coma_number(total_tweets));
-    $("#cross_tweets").text(coma_number(TWITTER.cross_tweets.length));
+    $("#total_tweets").text(coma_number(TWITTER.tweets.length));
+    // show #'s per topic and topic combo
+    $("#per_topic").html("");
+    UI.relational_output(TWITTER.tweets_dict, "");
     if (UI.tweet_queue.length > UI.tweet_display_max_count) {
         $("#new_tweet_count").text(coma_number(UI.tweet_display_max_count)+"+");
     } else {
@@ -146,6 +146,19 @@ $(document).on("click", ".add_trending_button", function() {
 });
 
 /* Events that insert things into the UI */
+Ui.prototype.relational_output = function(dic, previous) {
+    for (var key in dic) {
+        if (dic.hasOwnProperty(key)) {
+            var new_prev = previous + "+" + key;
+            if (new_prev.charAt(0) === "+") { new_prev = new_prev.replace("+", ""); }
+            if (dic[key].total_count > 0) {
+                $("#per_topic").append("<tr><td>" + dic[key].total_count + "</td><td>" + new_prev + "</td></tr>");
+                UI.relational_output(dic[key], new_prev);
+            }
+        }
+    }
+}
+    
 Ui.prototype.add_search = function(search) {
     var encoded_search = enc_name(search);
     var spot = SEARCHES.length-1;

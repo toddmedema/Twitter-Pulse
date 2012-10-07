@@ -19,26 +19,28 @@ function tps_chart() {
 }
 
 tps_chart.prototype.update = function() {
-    this.chart.selectAll("path").remove();
-    this.draw_axis();
-    // for each search term, plot data
-    var xScale = this.xScale;
-    var yScale = this.yScale;
-    var xPadding = this.xPadding;
-    var line = d3.svg.line()
-                .x(function(d,i) { return xScale(i); })
-                .y(function(d) { return yScale(d); })
-                .interpolate("basis");
-    for (var i = 0; i < SEARCHES.length; i++) {
-        var data = this.data[enc_name(SEARCHES[i])].slice(0, this.num_to_show);
-        this.chart.append("svg:path").attr("d", line(data))
-                .attr("class", "chart_line, color"+i)
-                .style("fill", 'rgba(0,0,0,0)')
-                .attr("transform", "translate(" + (xScale(0) - xPadding) + ")")
-                .transition()
-                .ease("linear")
-                .duration(1100)
-                .attr("transform", "translate(" + (xScale(1) - xPadding) + ")");
+    if (!$('#analytics_page').is(":hidden")) {
+        this.chart.selectAll("path").remove();
+        this.draw_axis();
+        // for each search term, plot data
+        var xScale = this.xScale;
+        var yScale = this.yScale;
+        var xPadding = this.xPadding;
+        var line = d3.svg.line()
+                    .x(function(d,i) { return xScale(i); })
+                    .y(function(d) { return yScale(d); })
+                    .interpolate("basis");
+        for (var i = 0; i < SEARCHES.length; i++) {
+            var data = this.data[enc_name(SEARCHES[i])].slice(0, this.num_to_show);
+            this.chart.append("svg:path").attr("d", line(data))
+                    .attr("class", "chart_line, color"+i)
+                    .style("fill", 'rgba(0,0,0,0)')
+                    .attr("transform", "translate(" + (xScale(0) - xPadding) + ")")
+                    .transition()
+                    .ease("linear")
+                    .duration(1100)
+                    .attr("transform", "translate(" + (xScale(1) - xPadding) + ")");
+        }
     }
 }
 tps_chart.prototype.resize = function() {

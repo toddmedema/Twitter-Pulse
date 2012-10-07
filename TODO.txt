@@ -1,8 +1,5 @@
 TODO
-add hashtable
-change tweets to hash:tweet_text table
-create dict for sorting tweet hashes into which keywords they have
-- also track counts to avoid recalculating on updates
+
 be able to take keyword list and fetch all tweets w/those keywords only
 
 
@@ -30,7 +27,8 @@ If tweet error, only do one test search to check if resolved,
    instead of trying to search for all topics
 
 Dream:
-use tweet timing data to generate historical info
+monitor timing throughout app and eliminate animations if slow
+use tweet timing data to generate more accurate + historical info
 Have links in tweets be actual links
 ability to show + hide trending topics on mobile
 
