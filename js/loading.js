@@ -61,7 +61,6 @@ function loading() {
                 ctx.font = '16px sans-serif';
                 ctx.fillText("Waiting on Twitter", canvas.width/2, canvas.height/2 + 6);
             }
-            TWITTER.till_next_search -= fps;
         }
         setTimeout(update, fps);
     };

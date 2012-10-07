@@ -1,9 +1,11 @@
-full: 60px/col
-959-768: 48px/col
-<767: all in one col, width: 100%
-
-
 TODO
+add hashtable
+change tweets to hash:tweet_text table
+create dict for sorting tweet hashes into which keywords they have
+- also track counts to avoid recalculating on updates
+be able to take keyword list and fetch all tweets w/those keywords only
+
+
 let users filter (ie "show only tweets that contain" then
     a checkmark list of all tweet searches)
     - will need to restructure tweet storage so that
@@ -15,9 +17,6 @@ make buttons, etc bigger on small displays
 - try using width: -webkit-calc(350px - 50px); for noJS scaling
 
 Share w/Woycheck to put out to world!
-
-for performance, use counters to keep track of tweet
-    #'s and limit array sizes (except tps history)
 
 BUG: if the page is created small, nav won't align when enlarged
 - phone switch portrait to landscape
@@ -39,6 +38,9 @@ animate tps graph instead of complete redraw
 - would need to handle re-scales somehow
 - http://blog.visual.ly/creating-animations-and-transitions-with-d3-js/
 
+reduce memory usage through tweet garbage collection
+
 USES:
 - monitor total convers traf on diff topics
 - read & monitor complex topics
+- see which topics are more related ("romney | obama" + big bird)
