@@ -1,5 +1,10 @@
 @import "specials";
 
+$screen-small-check: "only screen and (max-width : 767px)";
+$screen-not-small-check: "only screen and (min-width : 768px)";
+$screen-medium-check: "only screen and (min-width : 768px) and (max-width : 959px)";
+$screen-large-check: "only screen and (min-width : 960px)";
+
 /* ==positioning (adaptive)== */
 // by default, assumes a screen of 960px or wider
 #content {
@@ -28,12 +33,21 @@
     left: 235px;
     @include box_sizing();
 }
-@media only screen and (min-width: 768px) and (max-width: 959px) {
+#tweet_filters {
+    float: left;
+}
+#tweet_modes {
+    float: right;
+}
+#tweets {
+    padding-top: 70px;
+}
+@include respond-to(medium) {
     #pages {
         left: 187px;
     }
 }
-@media only screen and (max-width: 767px) {
+@include respond-to(mobile) {
     body, html {
         overflow: scroll;
     }
@@ -57,7 +71,12 @@
     }
     #pages {
         padding: 5px;
-        
+    }
+    #tweet_filters, #tweet_modes {
+        float: none;
+    }
+    #tweets {
+        padding-top: 0px;
     }
 }
 
@@ -76,6 +95,12 @@ body, html {
 body {
     font-family: Oxygen, serif;
     color: $cl-mainfnt;
+    @include respond-to(desktop) {
+        background-image: url('../img/bg.jpg'); // only show the backgroun if visible!
+    }
+}
+div {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 .page {
     display: none;
@@ -105,12 +130,22 @@ button {
     z-index: 100;
     background-color: $cl-hvrbg;
     border-bottom: thin solid #ddd;
-    
+    // box shadow has performance issues on mobile
+    @include respond-to(desktop) {
+        @include box_shadow(0px, 4px, 4px, -2px, #232323);
+    }
     text-align: center;
     font-size: 24px;
     #tabs div {
         padding: 2px 0px;
         text-decoration: none;
+        &:hover {
+            cursor: pointer;
+            // no hover effect on mobile
+            @include respond-to(desktop) {
+                text-decoration: underline;
+            }
+        }
     }
 }
 // make logo image retina-compatible
@@ -122,9 +157,9 @@ button {
     background: url('../img/logo.png');
     background-repeat: no-repeat;
 }
-@media only screen and (-moz-min-device-pixel-ratio: 2), 
-only screen and (-webkit-min-device-pixel-ratio: 2), 
-only screen and (min-device-pixel-ratio: 2) {
+@media screen and (-moz-min-device-pixel-ratio: 2), 
+screen and (-webkit-min-device-pixel-ratio: 2), 
+screen and (min-device-pixel-ratio: 2) {
     #logo_img {
         background: url('../img/logo_double_size.png');
         background-size: 275px 75px;
@@ -151,10 +186,13 @@ only screen and (min-device-pixel-ratio: 2) {
     padding: 1px;
     margin: 0px 5px 0px 0px;
     font-size: 14px;
+    @include respond-to(desktop) {
+        font-size: 16px; // englarge for easier touch use
+    }
 }
 .color_block {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     margin-right: 5px;
     display: inline-block;
 }
@@ -191,18 +229,19 @@ only screen and (min-device-pixel-ratio: 2) {
 }
 
 /* Tweets */
+#tweet_filters div {
+    width: 24px;
+    height: 24px;
+    margin: 0px 0px 0px 5px;
+}
 #tweet_modes {
     margin: 0px;
-    float: right;
 }
 #new_read_tweets, #tweet_view_error {
     display: none;
 }
 #tweet_view_error {
     color: #F00;
-}
-#tweets {
-    padding-top: 34px;
 }
 .tweet {
     padding: 0px 5px;
@@ -221,31 +260,4 @@ only screen and (min-device-pixel-ratio: 2) {
     display: none;
     padding: 0px 0px 10px 0px;
     text-align: center;
-}
-/* ===Size-dependent styling=== */
-// special for larger screens
-@media only screen and (min-width: 768px) {
-    // only show the backgroun if it'll be shown!
-    body {
-        background-image: url('../img/bg.jpg');
-    }
-    // box shadow has performance issues on mobile
-    #top {
-        @include box_shadow(0px, 4px, 4px, -2px, #232323);
-    }
-    // only have hover if you're not on a touch device
-    #top #tabs div:hover {
-        cursor: pointer;
-        text-decoration: underline;
-    }
-}
-@media only screen and (max-width: 767px) {
-    // remove ugly link highlighting from nav tabs - give it that native feel!
-    div {
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-    }
-    // make buttons larger + easier to use
-    .del_search_button {
-        font-size: 16px;
-    }
 }
