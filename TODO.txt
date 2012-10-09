@@ -2,12 +2,10 @@ TODO
 have topic combos on analytics page link to displaying those tweets
 
 
-!Share w/Woycheck to put out to world!
-
-
 
 **Dream**
 use webworker for twitter data retreival, only send back once it's all there
+explodes if you try to print it!
 
 UI+new features:
 hovering (or clicking?) a monitored topic highlights it in the chart
