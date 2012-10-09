@@ -15,12 +15,14 @@ function tps_chart() {
                 .attr("height", this.height);
     this.draw_text();
     
+    
     this.update();
 }
 
 tps_chart.prototype.update = function() {
     if (!$('#analytics_page').is(":hidden")) {
         this.chart.selectAll("path").remove();
+        this.chart.selectAll("rect").remove();
         this.draw_axis();
         // for each search term, plot data
         var xScale = this.xScale;
@@ -31,16 +33,24 @@ tps_chart.prototype.update = function() {
                     .y(function(d) { return yScale(d); })
                     .interpolate("basis");
         for (var i = 0; i < SEARCHES.length; i++) {
-            var data = this.data[enc_name(SEARCHES[i])].slice(0, this.num_to_show);
+            var data = this.data[enc_name(SEARCHES[i])].slice(0, this.num_to_show+1);
             this.chart.append("svg:path").attr("d", line(data))
-                    .attr("class", "chart_line, color"+i)
+                    .attr("class", "chart_line")
                     .style("fill", 'rgba(0,0,0,0)')
+                    .style('stroke', COLORS[i])
                     .attr("transform", "translate(" + (xScale(0) - xPadding) + ")")
                     .transition()
                     .ease("linear")
                     .duration(1100)
                     .attr("transform", "translate(" + (xScale(1) - xPadding) + ")");
         }
+        // clipping rectangle on right
+        this.chart.append('svg:rect')
+                .attr('width', this.xPadding)
+                .attr('height', this.height-this.bottomPadding)
+                .attr('x', this.width-this.xPadding)
+                .attr('y', 0)
+                .style('fill', '#f2f2f2');
     }
 }
 tps_chart.prototype.resize = function() {
@@ -53,7 +63,7 @@ tps_chart.prototype.draw_axis = function() {
     this.chart.selectAll(".axis").remove();
     var max = 1;
     for (var i = 0; i < SEARCHES.length; i++) {
-        var new_max = d3.max(this.data[enc_name(SEARCHES[i])], function(d) { return d; });
+        var new_max = d3.max(this.data[enc_name(SEARCHES[i])].slice(0, this.num_to_show), function(d) { return d; });
         if (new_max > max) { max = Math.ceil(new_max); }
     }
     this.xScale = d3.scale.linear()

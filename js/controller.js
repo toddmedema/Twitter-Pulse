@@ -11,7 +11,6 @@ $(document).ready(function() {
     TWITTER.add_search("obama");
     TWITTER.update(); // begins fetching twitter data
     UI.update(1000); // start having UI update regularly (every 1000ms)
-    UI.display_next_tweet(); // start the tweet display function
     $("#analytics_tab").click();
     update_trending();
     new NoClickDelay($('button'));

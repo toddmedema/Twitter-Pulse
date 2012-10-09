@@ -27,6 +27,7 @@ function Ui() {
     this.tweet_display_min_speed = 100; // minimum amount of time to show each new tweet
     this.tweet_display_max_count = 30; // maximum number of tweets to show in DOM before removing old ones
     this.tweet_mode = "stream";
+    this.active_filters = []; // list of active search terms for the tweet page
 }
 
 Ui.prototype.update = function(interval) {
@@ -89,7 +90,9 @@ $(".tab").click(function() {
         var page_id = $(this).text("> " + $(this).text() + " <")
                         .addClass("active_tab").attr('id').replace("_tab", "_page");
         $("#"+page_id).show().css('visibility', 'visible');
-
+        if ($(".active_tab").text() === "> Tweets <") {
+            UI.display_next_tweet(); // start the tweet display function
+        }
     }
 });
 $("#add_search_field").focus(function() {
@@ -131,18 +134,18 @@ $("#tweet_mode_toggle").click(function() {
 });
 $("#new_read_tweets").click(function() {
     $(".tweet").css('opacity', 0.5);
-    for (var i = 0; i < UI.tweet_display_max_count; i++) {
-        if (UI.tweet_queue.length > 0) {
-            UI._add_tweet_to_ui(UI.tweet_queue.pop()).hide().fadeIn(500);
-        }
-    }
+    UI.display_tweets(UI.tweet_display_max_count);
     UI.update();
 })
 // these use $(document) to dynamically add listeners to new objects
 $(document).on("click", ".del_search_button", function() {
     var search = $(this).parent().children(".term").text();
+    var index = SEARCHES.indexOf(search);
+    $(".color"+index).remove();
     $(this).parent().remove();
     TWITTER.remove_search(search);
+    var filter_index = UI.active_filters.indexOf(search);
+    UI.active_filters.splice(filter_index);
     UI.update();
 });
 $(document).on("click", ".add_trending_button", function() {
@@ -150,16 +153,30 @@ $(document).on("click", ".add_trending_button", function() {
     $(this).parent().remove();
     TWITTER.add_search(search);
 });
+$(document).on("click", ".filter", function() {
+    var search = $(this).data('term');
+    if ($(this).hasClass('off')) {
+        $(this).removeClass('off');
+        $(this).css('opacity', 1);
+        UI.active_filters.push(search);
+    } else {
+        $(this).addClass('off');
+        $(this).css('opacity', 0.3);
+        var index = UI.active_filters.indexOf(search);
+        if (index !== -1) {
+            UI.active_filters.splice(index, 1);
+        }
+    }
+    UI.change_filters();
+});
 
 /* Events that insert things into the UI */
 Ui.prototype.relational_output = function(dic, previous) {
     for (var key in dic) {
         if (dic.hasOwnProperty(key)) {
-            var new_prev = previous + "+" + key;
-            if (new_prev.charAt(0) === "+") { new_prev = new_prev.replace("+", ""); }
             if (dic[key].total_count > 0) {
-                $("#per_topic").append("<tr><td>" + dic[key].total_count + "</td><td>" + new_prev + "</td></tr>");
-                UI.relational_output(dic[key], new_prev);
+                $("#per_topic").append("<tr><td>" + dic[key].total_count + "</td><td>" + previous + key + "</td></tr>");
+                UI.relational_output(dic[key], previous + key + "+");
             }
         }
     }
@@ -173,20 +190,39 @@ Ui.prototype.add_search = function(search) {
     var text = $("<span class='term'>" + search + "</span> <span>(<span class='tweet_count'>0</span> tweets)</span>");
     var div = $("<div></div>").attr("id", encoded_search + "_listing").append(del).append(col).append(text);
     $("#searches").prepend(div);
+    
+    UI.active_filters.push(search);
+    var filter = $("<div class='color_block filter color" + spot + "' style='background-color: " + COLORS[spot] + ";'></div>");
+    filter.data('term', search);
+    $("#tweet_filters").append(filter);
+    UI.change_filters();
 }
 Ui.prototype.add_tweet = function(tweet) {
     UI.tweet_queue.push(tweet);
 }
 Ui.prototype.display_next_tweet = function() {
-    var display_speed = UI.tweet_display_speed;
-    if (UI.tweet_queue.length > 0 && !$('#tweets_page').is(":hidden") && UI.tweet_mode === "stream") {
-        var tweet = UI.tweet_queue.pop();
-        // if there's a big queue to display, move faster (but still with a delay)
-        display_speed = Math.max(display_speed - (UI.tweet_queue.length * 10), UI.tweet_display_min_speed);
-
-        UI._add_tweet_to_ui(tweet).hide().fadeIn(display_speed);
+    if (!$('#tweets_page').is(":hidden")) {
+        var display_speed = UI.tweet_display_speed;
+        if (UI.tweet_queue.length > 0 && UI.tweet_mode === "stream") {
+            var tweet = UI.tweet_queue.pop();
+            // if there's a big queue to display, move faster (but still with a delay)
+            display_speed = Math.max(display_speed - (UI.tweet_queue.length * 10), UI.tweet_display_min_speed);
+        
+            UI._add_tweet_to_ui(tweet).hide().fadeIn(display_speed);
+        }
+        setTimeout(UI.display_next_tweet, display_speed);
     }
-    setTimeout(UI.display_next_tweet, display_speed);
+}
+// adds count # of tweets from queue to UI
+Ui.prototype.display_tweets = function (count) {
+    if (count > UI.tweet_display_max_count) {
+        count = UI.tweet_display_max_count;
+    }
+    for (var i = 0; i < count; i++) {
+        if (UI.tweet_queue.length > 0) {
+            UI._add_tweet_to_ui(UI.tweet_queue.pop()).hide().fadeIn(500);
+        }
+    }
 }
 Ui.prototype._add_tweet_to_ui = function(tweet) {
     var div = $("<div class='tweet'></div>");
@@ -217,5 +253,27 @@ Ui.prototype._add_tweet_to_ui = function(tweet) {
 Ui.prototype.add_tps_chart = function() {
     UI.tps_chart = new tps_chart();
     UI.charts.push(UI.tps_chart);
+    UI.update();
+}
+Ui.prototype.change_filters = function() {
+    // clear out old tweets, queue newly relevant tweets for display, and force fill the page with old ones
+    $("#tweets").html("");
+    UI.tweet_queue = [];
+    var tweets = TWITTER.tweets_dict;
+    // descend the tweet dictionary in the proper order
+    for (var i = 0; i < SEARCHES.length; i++) {
+        if (SEARCHES.indexOf(UI.active_filters[i]) !== -1) {
+            tweets = tweets[SEARCHES[i]];
+        }
+    }
+    // attach keyword info to tweets
+    for (var i = 0; i < tweets['tweets'].length; i++) {
+        var hash = tweets['tweets'][i];
+        var tweet = TWITTER.tweets.getItem(hash);
+        tweet['keywords'] = UI.active_filters;
+        UI.tweet_queue.push(tweet);
+    }
+    // fill display with tweets and update UI
+    UI.display_tweets(UI.tweet_display_max_count);
     UI.update();
 }

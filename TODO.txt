@@ -1,32 +1,44 @@
 TODO
-let users filter (ie "show only tweets that contain" then
-    a checkmark list of all tweet searches)
-    - might also enable other analytics like
-        "related terms"
-    - have topic combos on analytics page link to displaying those tweets
-
-Share w/Woycheck to put out to world!
+have topic combos on analytics page link to displaying those tweets
 
 
+!Share w/Woycheck to put out to world!
+
+
+
+**Dream**
+use webworker for twitter data retreival, only send back once it's all there
+
+UI+new features:
+hovering (or clicking?) a monitored topic highlights it in the chart
+- have a UI variable .hover = (search # || -1)
+- in UI update, if .hover != -1, set color to rgba(x,x,x,.5) unless = .hover
+- call UI.update when topic clicked
+BUG: phone portrait->landscape, nav won't align when enlarged
+ability to show + hide trending topics on mobile
+use tweet timing data to generate more accurate/historical info
+show average tps per topic combo (track combo start time)
 give user the option to view graph at multiple scales
  - just need to change its width and update it
-Other analytics/visualizations like % of each term that shows up in cross-search tweets?
- - average tps per topic
+analyze tweets for related/frequent terms
+create a relational index to measure how related the terms are
+- base off # of tweets they share vs total
  
-If tweet error, only do one test search to check if resolved,
-   instead of trying to search for all topics
-
-Dream:
-BUG: phone portrait->landscape, nav won't align when enlarged
-monitor timing throughout app and eliminate animations if slow
-use tweet timing data to generate more accurate + historical info
-ability to show + hide trending topics on mobile
-
+Performance:
+(cpu profile: analytics page ~20%cpu, tweets ~10%cpu)
+(RAM: 270k tw = 90mb, 170k = 50mb, 10k = 10mb)
 animate tps graph instead of complete redraw
 - would need to handle re-scales somehow
 - http://blog.visual.ly/creating-animations-and-transitions-with-d3-js/
+don't completely delete analytics table on redraw - use IDs
+- would that actually be faster?
+- would prevent destroying people's highlights
+reduce long-term memory usage through tweet garbage collection
+If tweet error, only do one test search to check if resolved,
+   instead of trying to search for all topics
+monitor timing throughout app and eliminate animations if slow
+better handling of color# css - hardcoded?
 
-reduce memory usage through tweet garbage collection
 
 USES:
 - monitor total convers traf on diff topics

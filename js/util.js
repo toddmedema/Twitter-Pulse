@@ -80,24 +80,13 @@ function draw_rrectangle(ctx, x1, y1, x2, y2, radius, style) {
 		ctx.restore();
 	}
 }
-// generates a base brightness level (base), then randomly adds color to it
-// total colors possible: 2 base levels * 6 colorize options = 12 colors
-var COLOR_MAX = 12;
+// 10 colors optimally spaced for minimum confusion
+// based off http://web.media.mit.edu/~wad/color/palette.html
+var COLOR_MAX = 10;
 function random_color() {
-    var base = Math.ceil(Math.random()*2) * 64;
-    var red = base, green = base, blue = base;
-    var colorize = Math.floor(Math.random()*6);
-    if (colorize === 1) { red += 126; }
-    else if (colorize === 2) { green += 126; }
-    else if (colorize === 3) { blue += 126; }
-    else if (colorize === 4) { red += 126; blue += 126; }
-    else if (colorize === 5) { green += 126; blue += 126; }
-    return '#' + hexify(red, 2) + hexify(green, 2) + hexify(blue, 2);
-}
-function hexify(num, digits) {
-    num = num.toString(16);
-    while (num.length < digits) { num = "0" + num; }
-    return num;
+    var colors = ['#000000', '#0000FF', '#FF0000', '#00FF00', '#FFFF00',
+                '#FF00FF', '#FF8080', '#808080', '#800000', '#FF8000'];
+    return colors[Math.floor(Math.random()*colors.length)];
 }
 // from http://stackoverflow.com/questions/2901102/how-to-print-number-with-commas-as-thousands-separators-in-javascript
 function coma_number(x) {

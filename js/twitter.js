@@ -2,7 +2,7 @@ function Twitter() {
     this.init_time = (new Date()).getTime(); // when the Twitter obj was created (for reporting)
     this.start_time = 0; // time last search ended
     this.end_time = (new Date()).getTime(); // time next search starts
-    this.new_search = false; // lets UI know when a new search has been done
+    this.new_search = false; // lets UI know when a new search has been completed
     
     this.min_update_interval = 1000;
     this.update_interval = this.min_update_interval; // = max(min_update * # of searches, 1000)
@@ -62,13 +62,13 @@ Twitter.prototype.off_error = function() {
     $("#tweet_view_error").hide();
 }
 
-// tracks another tweet - if it was already found, show as cross-topic
+// tracks another tweet - if it fits the user's current filters, show it
 Twitter.prototype.add_tweet = function(search, tweet) {
     var hash = hashString(tweet.text);
     var encoded_search = enc_name(search);
-    // if we haven't seen this tweet before, analyze it
+    // if we haven't seen this tweet before, save and analyze it
     if (!TWITTER.tweets.hasItem(hash)) {
-        TWITTER.tweets.setItem(hash,tweet.text);
+        TWITTER.tweets.setItem(hash,{'text': tweet.text, 'from_user': tweet.from_user});
         var lower_text = tweet.text.toLowerCase();
         var keywords = [];
         for (var check = 0; check < SEARCHES.length; check++) {
@@ -85,10 +85,18 @@ Twitter.prototype.add_tweet = function(search, tweet) {
             }
             dic.tweets.push(hash);
 // TODO should handle elsewhere (update_displayed_tweets)
-            // if we've seen it in other searches, show it to the user
-            if (keywords.length > 1) {
-                tweet.keywords = keywords;
-                UI.add_tweet(tweet);
+            // if and only if it contains the active keywords, send to UI
+            if (keywords.length === UI.active_filters.length) {
+                var valid = true;
+                for (var i = 0; i < keywords.length; i++) {
+                    if (UI.active_filters.indexOf(keywords[i]) === -1) {
+                        valid = false;
+                    }
+                }
+                if (valid) {
+                    tweet.keywords = keywords;
+                    UI.add_tweet(tweet);
+                }
             }
         }
     }
@@ -113,9 +121,9 @@ Twitter.prototype.add_search = function(name) {
             SEARCHES.push(name);
             COLORS.push(color);
             TWITTER.tweets_per_second[encoded_search] = [0];
+            TWITTER.recursive_insert(TWITTER.tweets_dict, name);
             UI.add_search(name);
         }
-        TWITTER.recursive_insert(TWITTER.tweets_dict, name);
         TWITTER.update_interval = Math.max(TWITTER.min_update_interval * SEARCHES.length, 1000);
         mixpanel.track("Search added", {"term": name, "total": SEARCHES.length});
     }

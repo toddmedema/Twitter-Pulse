@@ -40,7 +40,7 @@ $screen-large-check: "only screen and (min-width : 960px)";
     float: right;
 }
 #tweets {
-    padding-top: 70px;
+    padding-top: 72px;
 }
 @include respond-to(medium) {
     #pages {
@@ -85,7 +85,6 @@ $screen-large-check: "only screen and (min-width : 960px)";
 $cl-mainbg: #f2f2f2;
 $cl-hvrbg: #fff;
 $cl-slctbg: #d2d2d2;
-$cl-actvbg: #ddd;
 $cl-mainfnt: #222;
 $cl-blurfnt: #666;
 
@@ -229,10 +228,14 @@ screen and (min-device-pixel-ratio: 2) {
 }
 
 /* Tweets */
-#tweet_filters div {
+.filter {
     width: 24px;
     height: 24px;
     margin: 0px 0px 0px 5px;
+    &:hover {
+        cursor: pointer;
+    }
+    border: 1px solid #000;
 }
 #tweet_modes {
     margin: 0px;
