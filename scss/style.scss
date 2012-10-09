@@ -1,4 +1,6 @@
 @import "mixins";
+@import "skeleton3";
+@import "skeletonStyles";
 
 $screen-small-check: "only screen and (max-width : 767px)";
 $screen-not-small-check: "only screen and (min-width : 768px)";

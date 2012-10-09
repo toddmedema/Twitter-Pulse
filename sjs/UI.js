@@ -93,6 +93,7 @@ $(".tab").click(function() {
         if ($(".active_tab").text() === "> Tweets <") {
             UI.display_next_tweet(); // start the tweet display function
         }
+        UI.update();
     }
 });
 $("#add_search_field").focus(function() {
