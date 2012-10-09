@@ -107,7 +107,7 @@ $("#add_search_field").blur(function() {
 });
 // have pressing enter submit new search term
 $('#add_search_field').keydown(function(event) {
-    if (event.which == 13) {
+    if (event.which === 13) {
         $("#add_search_button").click();
         event.preventDefault();
     }
@@ -136,7 +136,7 @@ $("#new_read_tweets").click(function() {
     $(".tweet").css('opacity', 0.5);
     UI.display_tweets(UI.tweet_display_max_count);
     UI.update();
-})
+});
 // these use $(document) to dynamically add listeners to new objects
 $(document).on("click", ".del_search_button", function() {
     var search = $(this).parent().children(".term").text();
