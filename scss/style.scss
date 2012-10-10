@@ -2,11 +2,6 @@
 @import "skeleton3";
 @import "skeletonStyles";
 
-$screen-small-check: "only screen and (max-width : 767px)";
-$screen-not-small-check: "only screen and (min-width : 768px)";
-$screen-medium-check: "only screen and (min-width : 768px) and (max-width : 959px)";
-$screen-large-check: "only screen and (min-width : 960px)";
-
 /* ==positioning (adaptive)== */
 // by default, assumes a screen of 960px or wider
 #content {
@@ -20,7 +15,7 @@ $screen-large-check: "only screen and (min-width : 960px)";
 }
 #search_bar {
     position: fixed;
-    top: 125px;
+    top: 110px;
     @include box_sizing();
 }
 #add_search_button {
@@ -31,7 +26,7 @@ $screen-large-check: "only screen and (min-width : 960px)";
 #pages {
     height: 100%;
     position: absolute;
-    top: 126px;
+    top: 111px;
     left: 235px;
     @include box_sizing();
 }
@@ -44,7 +39,7 @@ $screen-large-check: "only screen and (min-width : 960px)";
 #tweets {
     padding-top: 72px;
 }
-@include respond-to(medium) {
+@include respond-to(tablet) {
     #pages {
         left: 187px;
     }
@@ -152,7 +147,7 @@ button {
 // make logo image retina-compatible
 #logo_img {
     width: 275px;
-    height: 75px;
+    height: 60px;
     margin: auto;
     margin-bottom: 3px;
     background: url('../img/logo.png');
@@ -163,7 +158,7 @@ screen and (-webkit-min-device-pixel-ratio: 2),
 screen and (min-device-pixel-ratio: 2) {
     #logo_img {
         background: url('../img/logo_double_size.png');
-        background-size: 275px 75px;
+        background-size: 275px 60px;
     }
 }
 
@@ -234,10 +229,18 @@ screen and (min-device-pixel-ratio: 2) {
     width: 24px;
     height: 24px;
     margin: 0px 0px 0px 5px;
+    opacity: 1;
     &:hover {
         cursor: pointer;
+        opacity: 0.7;
     }
     border: 1px solid #000;
+}
+.off {
+    opacity: 0.3;
+    &:hover {
+        opacity: 0.5;
+    }
 }
 #tweet_modes {
     margin: 0px;

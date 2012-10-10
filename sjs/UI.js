@@ -158,11 +158,11 @@ $(document).on("click", ".filter", function() {
     var search = $(this).data('term');
     if ($(this).hasClass('off')) {
         $(this).removeClass('off');
-        $(this).css('opacity', 1);
+        //$(this).css('opacity', 1);
         UI.active_filters.push(search);
     } else {
         $(this).addClass('off');
-        $(this).css('opacity', 0.3);
+        //$(this).css('opacity', 0.3);
         var index = UI.active_filters.indexOf(search);
         if (index !== -1) {
             UI.active_filters.splice(index, 1);
