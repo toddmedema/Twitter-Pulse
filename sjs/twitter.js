@@ -15,16 +15,18 @@ function Twitter() {
 }
     
 // check for new tweets
-Twitter.prototype.update = function() {
+Twitter.prototype.update = function(primary) {
     for (var i = 0; i < SEARCHES.length; i++) {
         var search = SEARCHES[i];
         // if final search, let the UI know that there's new data
         if (i === SEARCHES.length -1) { TWITTER.update_thread(search, true); }
         else { TWITTER.update_thread(search); }
     }
-    setTimeout(TWITTER.update, TWITTER.update_interval);
-    TWITTER.start_time = TWITTER.end_time;
-    TWITTER.end_time = (new Date()).getTime() + TWITTER.update_interval;
+    if (primary) {
+        setTimeout(TWITTER.update, TWITTER.update_interval);
+        TWITTER.start_time = TWITTER.end_time;
+        TWITTER.end_time = (new Date()).getTime() + TWITTER.update_interval;
+    }
 }
 Twitter.prototype.update_thread = function(search, final) {
     var encoded_search = enc_name(search);
@@ -103,7 +105,7 @@ Twitter.prototype.add_tweet = function(search, tweet) {
 }
 
 // add another search to monitor
-Twitter.prototype.add_search = function(name) {
+Twitter.prototype.add_search = function(name, initial) {
     // generate a fairly distinct random color that's not already in the array
     if (COLORS.length >= COLOR_MAX) {
         alert("Max simultaneous search count reached");
@@ -125,7 +127,13 @@ Twitter.prototype.add_search = function(name) {
             UI.add_search(name);
         }
         TWITTER.update_interval = Math.max(TWITTER.min_update_interval * SEARCHES.length, 1000);
-        mixpanel.track("Search added", {"term": name, "total": SEARCHES.length});
+        if (!initial) { // don't want to mess up analytics with the default searches
+            mixpanel.track("Search added", {"term": name, "total": SEARCHES.length});
+        }
+        // give user first results now, if the wait time is too long
+        if (end_time - (new Date()).getTime() > 1000) {
+            TWITTER.update();
+        }
     }
 }
 Twitter.prototype.recursive_insert = function(dic, name) {

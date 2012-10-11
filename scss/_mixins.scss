@@ -1,0 +1,39 @@
+@mixin respond-to($media) {
+  @if $media == tiny {
+    @media only screen and (max-width: 480px) { @content; }
+  }
+  @else if $media == mobile {
+    @media only screen and (max-width: 767px) { @content; }
+  }
+  @else if $media == tablet {
+    @media only screen and (min-width: 768px) and (max-width: 959px) { @content; }
+  }
+  @else if $media == desktop {
+    @media only screen and (min-width: 768px) { @content; }
+  }
+  @else if $media == large {
+    @media only screen and (min-width: 960px) { @content; }
+  }
+  @else if $media == not_large {
+    @media only screen and (max-width: 959px) { @content; }
+  }
+}
+
+@mixin rounded($side, $radius: 10px) {
+    border-#{$side}-radius: $radius;
+    -moz-border-radius-#{$side}: $radius;
+    -webkit-border-#{$side}-radius: $radius;
+}
+
+// note: bad for mobile scrolling performance
+@mixin box_shadow($hor_offset, $ver_offset, $blur, $spread, $color, $inset: "") {
+    box-shadow: #{$inset} $hor_offset $ver_offset $blur $spread $color;
+    -moz-box-shadow: #{$inset} $hor_offset $ver_offset $blur $spread $color;
+    -webkit-box-shadow: #{$inset} $hor_offset $ver_offset $blur $spread $color;
+}
+
+@mixin box_sizing() {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}

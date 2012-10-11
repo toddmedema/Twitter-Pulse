@@ -1,27 +1,29 @@
 TODO
+
 have topic combos on analytics page link to displaying those tweets
+use compass where it can help
+- replace use of my custom frameworks (styling + grid)
+- do so with TM.com too, then delete my files completely
 
-
+create a relational index to measure how related the terms are
+- base off # of tweets they share vs total
+- need to re-work that UI to be more space efficient
 
 **Dream**
-use webworker for twitter data retreival, only send back once it's all there
-- http://www.ibm.com/developerworks/xml/library/x-html5mobile4/index.html
-CSS explodes if you try to print it!
-
 UI+new features:
+Use icons for tabs instead of words to condense top bar (esp on mobile)
+- list here: http://fortawesome.github.com/Font-Awesome
 hovering (or clicking?) a monitored topic highlights it in the chart
 - have a UI variable .hover = (search # || -1)
 - in UI update, if .hover != -1, set color to rgba(x,x,x,.5) unless = .hover
 - call UI.update when topic clicked
 BUG: phone portrait->landscape, nav won't align when enlarged
-ability to show + hide trending topics on mobile
 use tweet timing data to generate more accurate/historical info
 show average tps per topic combo (track combo start time)
 give user the option to view graph at multiple scales
  - just need to change its width and update it
 analyze tweets for related/frequent terms
-create a relational index to measure how related the terms are
-- base off # of tweets they share vs total
+CSS explodes if you try to print it!
  
 Performance:
 (cpu profile: analytics page ~20%cpu, tweets ~10%cpu)
@@ -37,6 +39,12 @@ If tweet error, only do one test search to check if resolved,
    instead of trying to search for all topics
 monitor timing throughout app and eliminate animations if slow
 better handling of color# css - hardcoded?
+use Modernizr to detect weborker support
+- http://modernizr.com/docs/#features-html5
+if webworker supported, separate tweet processing into a worker
+- what to give it that has a heavy load but is self-contained?
+- http://www.ibm.com/developerworks/xml/library/x-html5mobile4/index.html
+- http://ejohn.org/blog/web-workers/
 
 
 USES:

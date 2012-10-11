@@ -3,10 +3,11 @@
     <head>
         <title>MacroTweet</title>
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
             
-
         <link href="http://fonts.googleapis.com/css?family=Quantico|Oxygen" rel="stylesheet" type="text/css">
-        <link href="css/style.css" rel="stylesheet" type="text/css">
+        <link href="css/font-awesome.css" rel="stylesheet" type="text/css">
+        <link href="css/mine.css" rel="stylesheet" type="text/css">
             
         <script type="text/javascript" src="mixpanel.js"></script>
     </head>
@@ -18,19 +19,19 @@
                     <div id="logo_img"></div>
                 </div>
                 <div id="tabs">
-                    <div id="analytics_tab" class="one-third column tab">Analytics</div>
-                    <div id="tweets_tab" class="one-third column tab">Tweets</div>
-                    <div id="about_tab" class="one-third column tab">About</div>
+                    <div id="analytics_tab" class="one-third column tab clickable">Analytics</div>
+                    <div id="tweets_tab" class="one-third column tab clickable">Tweets</div>
+                    <div id="about_tab" class="one-third column tab clickable">About</div>
                 </div>
             </div>
             
             <div id="page" class="container">
                 <div id="search_bar" class="four columns">
                     <input type="text" id="add_search_field" class="blurred" value="Add a search term" />
-                    <button id="add_search_button"></button>
+                    <button id="add_search_button" class="clickable"></button>
                     <h2 id="search_title">Monitored topics</h2>
                     <div id="searches"></div>
-                    <h2 id="trending_title">Trending topics</h2>
+                    <h2 id="trending_title"><i id="trending_toggle" class="icon-chevron-down"></i> Trending topics</h2>
                     <div id="trending"></div>
                 </div>
             
@@ -53,8 +54,8 @@
                         <div id="tweet_filters"><h2>Only show tweets containing:</h2></div>
                         <div id="tweet_modes">
                             <span id="tweet_view_error">(waiting on Twitter) </span>
-                            <button id="new_read_tweets">load <span id="new_tweet_count">0</span> new tweets</button>
-                            <button id="tweet_mode_toggle">Read Mode</button>
+                            <button id="new_read_tweets" class="clickable">load <span id="new_tweet_count">0</span> new tweets</button>
+                            <button id="tweet_mode_toggle" class="clickable">Read Mode</button>
                         </div>
                         <div id="tweets"></div>
                         <div id="tweets_to_top">
@@ -63,6 +64,16 @@
                     </div>
                     
                     <div id="about_page" class="page">
+                        <!-- AddThis Button BEGIN -->
+                        <div class="addthis_toolbox addthis_default_style ">
+                        <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+                        <a class="addthis_button_tweet"></a>
+                        <a class="addthis_button_pinterest_pinit"></a>
+                        <a class="addthis_counter addthis_pill_style"></a>
+                        </div>
+                        <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+                        <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=toddmedema"></script>
+                        <!-- AddThis Button END -->
                         <p>MacroTweet enables you to track real-time Twitter activity on search topics you are interested in.</p>
                         <p>Use the Tweets page to follow conversations - use filters to only show tweets on certain topics.</p>
                         <p>MacroTweet is built entirely in Javascript and runs on computers, tablets and phones without a server.</p>

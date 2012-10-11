@@ -103,3 +103,158 @@ function linkify(text) {
         return '<a href="' + url + '">' + url + '</a>';  
     })  
 }
+/* REPORT ERRORS TO MIXPANEL */
+// Browser detection (http://www.quirksmode.org/js/detect.html)
+var BrowserDetect = {
+    init: function () {
+        this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
+        this.version = this.searchVersion(navigator.userAgent)
+            || this.searchVersion(navigator.appVersion)
+            || "an unknown version";
+        this.OS = this.searchString(this.dataOS) || "an unknown OS";
+    },
+    searchString: function (data) {
+        for (var i=0;i<data.length;i++)    {
+            var dataString = data[i].string;
+            var dataProp = data[i].prop;
+            this.versionSearchString = data[i].versionSearch || data[i].identity;
+            if (dataString) {
+                if (dataString.indexOf(data[i].subString) != -1)
+                    return data[i].identity;
+            }
+            else if (dataProp)
+                return data[i].identity;
+        }
+    },
+    searchVersion: function (dataString) {
+        var index = dataString.indexOf(this.versionSearchString);
+        if (index == -1) return;
+        return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+    },
+    dataBrowser: [
+        {
+            string: navigator.userAgent,
+            subString: "Chrome",
+            identity: "Chrome"
+        },
+        {   string: navigator.userAgent,
+            subString: "OmniWeb",
+            versionSearch: "OmniWeb/",
+            identity: "OmniWeb"
+        },
+        {
+            string: navigator.vendor,
+            subString: "Apple",
+            identity: "Safari",
+            versionSearch: "Version"
+        },
+        {
+            prop: window.opera,
+            identity: "Opera",
+            versionSearch: "Version"
+        },
+        {
+            string: navigator.vendor,
+            subString: "iCab",
+            identity: "iCab"
+        },
+        {
+            string: navigator.vendor,
+            subString: "KDE",
+            identity: "Konqueror"
+        },
+        {
+            string: navigator.userAgent,
+            subString: "Firefox",
+            identity: "Firefox"
+        },
+        {
+            string: navigator.vendor,
+            subString: "Camino",
+            identity: "Camino"
+        },
+        {        // for newer Netscapes (6+)
+            string: navigator.userAgent,
+            subString: "Netscape",
+            identity: "Netscape"
+        },
+        {
+            string: navigator.userAgent,
+            subString: "MSIE",
+            identity: "Explorer",
+            versionSearch: "MSIE"
+        },
+        {
+            string: navigator.userAgent,
+            subString: "Gecko",
+            identity: "Mozilla",
+            versionSearch: "rv"
+        },
+        {         // for older Netscapes (4-)
+            string: navigator.userAgent,
+            subString: "Mozilla",
+            identity: "Netscape",
+            versionSearch: "Mozilla"
+        }
+    ],
+    dataOS : [
+        {
+            string: navigator.platform,
+            subString: "Win",
+            identity: "Windows"
+        },
+        {
+            string: navigator.platform,
+            subString: "Mac",
+            identity: "Mac"
+        },
+        {
+            string: navigator.userAgent,
+            subString: "iPhone",
+            identity: "iPhone/iPod"
+        },
+        {
+            string: navigator.platform,
+            subString: "Linux",
+            identity: "Linux"
+        }
+    ]
+
+};
+BrowserDetect.init();
+
+
+// Error reporting
+window.onerror = function(errorMessage, url, lineNumber) {
+    try {
+        if (navigator.userAgent.indexOf('Firefox') !== -1 &&
+                errorMessage === 'Error loading script') {
+            // Firefox generates this error when leaving a page
+            // before all scripts have finished loading
+        }
+        else if (navigator.userAgent.indexOf('Safari') !== -1 &&
+                errorMessage === 'JavaScript execution exceeded timeout') {
+            // Bug on Safari on iOS devices
+            // After ANY page causes a timeout, this will be thrown after ~1ms of
+            // JavaScript execution on every page until the browser is restarted.
+            // http://stackoverflow.com/questions/7447731/javascript-execution-exceeded-timeout-jquery-mobile
+        }
+        else {
+            var report = {};
+            report['message'] = errorMessage;
+            report['browser'] = BrowserDetect.browser + " " + BrowserDetect.version;
+            report['OS'] = BrowserDetect.OS;
+            report['scriptURL'] = url;
+            report['browserURL'] = window.location.toString();
+            report['line'] = lineNumber;
+            report['trace'] = printStackTrace().join('\n');
+
+            mixpanel.track("JS_error", report);
+        }
+    }
+    catch (e) {
+        // prevent recursive onerror calls if above function has error
+    }
+    // Also fire the default handler
+    return false;
+};

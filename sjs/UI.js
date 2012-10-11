@@ -138,6 +138,15 @@ $("#new_read_tweets").click(function() {
     UI.display_tweets(UI.tweet_display_max_count);
     UI.update();
 });
+$("#trending_toggle").click(function() {
+    if ($(this).hasClass("icon-chevron-down")) {
+        $(this).addClass("icon-chevron-up").removeClass("icon-chevron-down");
+        $("#trending").show();
+    } else {
+        $(this).addClass("icon-chevron-down").removeClass("icon-chevron-up");
+        $("#trending").hide();
+    }
+});
 // these use $(document) to dynamically add listeners to new objects
 $(document).on("click", ".del_search_button", function() {
     var search = $(this).parent().children(".term").text();
@@ -186,14 +195,14 @@ Ui.prototype.relational_output = function(dic, previous) {
 Ui.prototype.add_search = function(search) {
     var encoded_search = enc_name(search);
     var spot = SEARCHES.length-1;
-    var del = $("<button>X</button>").attr("id", encoded_search+"_del").addClass("del_search_button");
+    var del = $("<button>X</button>").attr("id", encoded_search+"_del").addClass("del_search_button").addClass("clickable");
     var col = $("<div class='color_block color" + spot + "' style='background-color: " + COLORS[spot] + ";'></div>");
     var text = $("<span class='term'>" + search + "</span> <span>(<span class='tweet_count'>0</span> tweets)</span>");
     var div = $("<div></div>").attr("id", encoded_search + "_listing").append(del).append(col).append(text);
     $("#searches").prepend(div);
     
     UI.active_filters.push(search);
-    var filter = $("<div class='color_block filter color" + spot + "' style='background-color: " + COLORS[spot] + ";'></div>");
+    var filter = $("<div class='color_block filter clickable color" + spot + "' style='background-color: " + COLORS[spot] + ";'></div>");
     filter.data('term', search);
     $("#tweet_filters").append(filter);
     UI.change_filters();

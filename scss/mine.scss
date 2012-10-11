@@ -23,6 +23,9 @@
     right: 0px;
     top: 0px;
 }
+#trending_toggle {
+    display: none;
+}
 #pages {
     height: 100%;
     position: absolute;
@@ -63,7 +66,10 @@
     #add_search_button {
         right: 5px;
     }
-    #trending_title, #trending {
+    #trending_toggle {
+        display: inline;
+    }
+    #trending {
         display: none;
     }
     #pages {
@@ -194,6 +200,13 @@ screen and (min-device-pixel-ratio: 2) {
 }
 #trending_title {
     margin: 6px 0px 0px 0px;
+    display: inline;
+}
+#trending_toggle {
+    &:hover {
+        cursor: pointer;
+        color: $cl-blurfnt;
+    }
 }
 .add_trending_button {
     padding: 0px 1px 0px 1px;

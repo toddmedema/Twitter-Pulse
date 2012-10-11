@@ -7,13 +7,14 @@ $(document).ready(function() {
     UI = new Ui();
     window.onresize(); // make sure the UI fits the screen
     TWITTER = new Twitter();
-    TWITTER.add_search("romney");
-    TWITTER.add_search("obama");
-    TWITTER.update(); // begins fetching twitter data
+    TWITTER.add_search("romney", true);
+    TWITTER.add_search("obama", true);
+    TWITTER.update(true); // begins fetching twitter data
     UI.update(1000); // start having UI update regularly (every 1000ms)
     $("#analytics_tab").click();
     update_trending();
-    new NoClickDelay($('button'));
+    new NoClickDelay($('a'));
+    new NoClickDelay($('.clickable'));
 });
 
 // loads & displays trending topics as suggestions to user, refreshes once per minute
