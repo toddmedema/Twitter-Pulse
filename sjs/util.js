@@ -100,7 +100,7 @@ function linkify(text) {
     var urlRegex = /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
     // var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;  
     return text.replace(urlRegex, function(url) {  
-        return '<a href="' + url + '">' + url + '</a>';  
+        return '<a href="' + url + '" target="_blank">' + url + '</a>';  
     })  
 }
 /* REPORT ERRORS TO MIXPANEL */

@@ -7,7 +7,7 @@ function loading() {
     ctx.fillStyle = "#FFFFFF";
     
     var fps = 1000/30; // fps at 30fps
-    var radius = 10;
+    var radius = Math.ceil(canvas.height/2);
     var current_percent = 100; // forces complete redraw at start
     
     var rotations = 0; // tracking rotations for spinner
@@ -54,7 +54,7 @@ function loading() {
                     // have the loading bar turn red if the user is current rate-limited
                     if (TWITTER.error) { ctx.fillStyle = "#FF0000"; }
                     else { ctx.fillStyle = "#FFFFFF"; }
-                    draw_rrectangle(ctx, 0, 1, width, canvas.height-1, radius, "fill");
+                    draw_rrectangle(ctx, 1, 1, width, canvas.height-1, radius, "fill");
                 }
                 if (TWITTER.error) {
                     ctx.fillStyle = "#000000";

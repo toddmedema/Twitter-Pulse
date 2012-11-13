@@ -1,4 +1,8 @@
 TODO
+BUG: active_filters not working properly!!!
+
+use window. for globals
+- make use of more functions + function calls (ie ui actions should basically just call another function)
 
 have topic combos on analytics page link to displaying those tweets
 use compass where it can help

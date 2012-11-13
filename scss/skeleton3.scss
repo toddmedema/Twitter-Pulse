@@ -8,27 +8,6 @@
 */
 /* #Reset & Basics (Inspired by E. Meyers)
 ================================================== */
-html, body, div, span, object, h1, h2, h3, h4, h5, h6, p, a, em, img, strike, strong, sub, sup, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, canvas, embed, footer, header, hgroup, menu, nav, section, article, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline; }
-
-body {
-  line-height: 1; }
-
-ol, ul {
-  list-style: none; }
-
-blockquote, q {
-  quotes: none; }
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0; }
-  
 /* skeleton formatting */
 .remove-bottom {
   margin-bottom: 0 !important; }

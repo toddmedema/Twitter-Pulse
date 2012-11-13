@@ -9,7 +9,7 @@ $(document).ready(function() {
     TWITTER = new Twitter();
     TWITTER.add_search("romney", true);
     TWITTER.add_search("obama", true);
-    TWITTER.update(true); // begins fetching twitter data
+    TWITTER.update(); // begins fetching twitter data
     UI.update(1000); // start having UI update regularly (every 1000ms)
     $("#analytics_tab").click();
     update_trending();

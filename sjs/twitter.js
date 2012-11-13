@@ -22,7 +22,7 @@ Twitter.prototype.update = function(primary) {
         if (i === SEARCHES.length -1) { TWITTER.update_thread(search, true); }
         else { TWITTER.update_thread(search); }
     }
-    if (primary) {
+    if (new Date().getTime() > TWITTER.end_time) {
         setTimeout(TWITTER.update, TWITTER.update_interval);
         TWITTER.start_time = TWITTER.end_time;
         TWITTER.end_time = (new Date()).getTime() + TWITTER.update_interval;
@@ -131,7 +131,7 @@ Twitter.prototype.add_search = function(name, initial) {
             mixpanel.track("Search added", {"term": name, "total": SEARCHES.length});
         }
         // give user first results now, if the wait time is too long
-        if (end_time - (new Date()).getTime() > 1000) {
+        if (TWITTER.end_time - (new Date()).getTime() > 1000) {
             TWITTER.update();
         }
     }

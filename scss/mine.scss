@@ -1,3 +1,5 @@
+@import "compass/reset";
+
 @import "mixins";
 @import "skeleton3";
 @import "skeletonStyles";
@@ -139,7 +141,7 @@ button {
     text-align: center;
     font-size: 24px;
     #tabs div {
-        padding: 2px 0px;
+        padding: 2px -1px;
         text-decoration: none;
         &:hover {
             cursor: pointer;
